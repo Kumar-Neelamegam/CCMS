@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="vcc.coremodule">
+
+
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+
+    <supports-screens
+        android:anyDensity="true"
+        android:largeScreens="true"
+        android:normalScreens="true"
+        android:requiresSmallestWidthDp="600"
+        android:resizeable="true"
+        android:smallScreens="true"
+        android:xlargeScreens="true" />
+
+    <application
+        android:allowBackup="true"
+        tools:replace="android:icon,android:theme"
+        android:largeHeap="true"
+        android:icon="@mipmap/ic_launcher"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme.NoActionBar">
+        <activity android:name="core_modules.Splash">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        //Dashboard_Activities =========================================================================
+
+        <activity
+            android:windowSoftInputMode="stateAlwaysHidden"
+            android:name="core_modules.Task_Navigation"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+
+        //Entry_Activities =========================================================================
+
+        <activity
+            android:windowSoftInputMode="stateAlwaysHidden"
+            android:name="core_modules.Institute_Registration"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:windowSoftInputMode="stateAlwaysHidden"
+            android:name="entry_activities.Enroll_Students"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:windowSoftInputMode="stateAlwaysHidden"
+            android:name="masters.Mstr_Test"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:windowSoftInputMode="stateAlwaysHidden"
+            android:name="entry_activities.Send_SMS"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:windowSoftInputMode="stateAlwaysHidden"
+            android:name="entry_activities.Take_Attendance"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:windowSoftInputMode="stateAlwaysHidden"
+            android:name="registers_activities.Students_Register"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:windowSoftInputMode="stateAlwaysHidden"
+            android:name="student_profile.StudentTabActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+
+        //==========================================================================================
+        //Register_Activities
+        <activity
+            android:windowSoftInputMode="stateAlwaysHidden"
+            android:name="registers_activities.Attendance_Register"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:windowSoftInputMode="stateAlwaysHidden"
+            android:name="registers_activities.Mark_Register"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+
+        <activity
+            android:windowSoftInputMode="stateAlwaysHidden"
+            android:name="entry_activities.Mark_Entry"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+
+        <activity
+            android:name="masters.Masters"
+            android:windowSoftInputMode="stateAlwaysHidden"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+
+        <activity
+            android:name="reports.Reports"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name="core_modules.Institute_Edit"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+
+        <activity
+            android:name="core_modules.Institute_View"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name="student_profile.Student_Profile_Edit"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+
+        <activity
+            android:name="masters.Mstr_Barcodes"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+
+
+        //Masters==========================================================================================
+        <activity
+            android:name="masters.Mstr_Batch"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name="masters.Mstr_Fee"
+            android:windowSoftInputMode="stateAlwaysHidden"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name="masters.Mstr_Occupation"
+            android:windowSoftInputMode="stateAlwaysHidden"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:windowSoftInputMode="stateAlwaysHidden"
+            android:name="masters.Mstr_School"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:windowSoftInputMode="stateAlwaysHidden"
+            android:name="masters.Mstr_Subject"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+
+        //Reports==========================================================================================
+        <activity
+            android:name="reports.Reports_Attendance"
+            android:windowSoftInputMode="stateAlwaysHidden"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name="reports.Reports_Fee"
+            android:windowSoftInputMode="stateAlwaysHidden"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name="reports.Reports_Mark"
+            android:windowSoftInputMode="stateAlwaysHidden"
+            android:theme="@style/AppTheme.NoActionBar" />
+        //==========================================================================================
+
+
+    <meta-data android:name="instamojo.orderauth.url"
+                   android:value="http://kumargtaiv.freeoda.com/access_token.php"
+            />
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="83e8019c943b174f7c47929dc0e3fb27dfdf9444" />
+    </application>
+
+    <uses-permission-sdk-23 android:name="android.permission.RECEIVE_SMS"/>
+ 
+    <uses-permission-sdk-23 android:name="android.permission.READ_SMS"/>
+ 
+    <uses-permission android:name="android.permission.RECEIVE_SMS"/>
+ 
+    <uses-permission android:name="android.permission.READ_SMS"/>
+ 
+
+</manifest>

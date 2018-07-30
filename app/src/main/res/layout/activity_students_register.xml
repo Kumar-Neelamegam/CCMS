@@ -1,0 +1,302 @@
+<android.support.design.widget.CoordinatorLayout
+
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+    android:id="@+id/parent_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <android.support.design.widget.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                layout_collapseMode="pin"
+                android:layout_width="match_parent"
+                android:layout_height="60dip"
+                android:background="@drawable/toolbar_dropshadow"
+                android:padding="5dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+
+                    <ImageView
+                        android:id="@+id/toolbar_back"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:background="@drawable/ic_back"
+                        android:visibility="visible" />
+
+                    <TextView
+                        android:id="@+id/txvw_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentLeft="true"
+                        android:layout_below="@+id/agegen"
+                        android:layout_weight="1"
+                        android:fontFamily="Calibri"
+                        android:gravity="center"
+                        android:text="Students Register"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textColor="#FFFFFF"
+                        android:textStyle="bold" />
+
+
+                    <ImageView
+                        android:id="@+id/ic_options"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginRight="10dp"
+                        android:background="@drawable/ic_action_options"
+                        android:visibility="visible" />
+
+
+
+                    <ImageView
+                        android:id="@+id/ic_exit"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:background="@drawable/ic_exit"
+                        android:visibility="visible" />
+
+                </LinearLayout>
+
+
+            </android.support.v7.widget.Toolbar>
+
+
+            //tool bar
+        </android.support.design.widget.AppBarLayout>
+
+
+            <LinearLayout
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+
+
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:background="@drawable/rounded_bg"
+                        android:padding="5dp"
+                        android:theme="@style/InputLayout">
+
+                        <android.support.v7.widget.AppCompatEditText
+                            android:id="@+id/search_edttxt"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@null"
+                            android:hint="Search student by name" />
+
+                    </android.support.design.widget.TextInputLayout>
+
+                <TextView
+                    android:id="@+id/txt_count"
+                    android:padding="5dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@color/colorPrimary"
+                    android:text="-"
+                    />
+
+
+
+                    <LinearLayout
+                        android:id="@+id/layout_rowitem"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@color/colorPrimaryDark"
+                        android:orientation="vertical">
+
+                        <HorizontalScrollView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <LinearLayout
+                                android:orientation="vertical"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent">
+
+                                <LinearLayout
+                                    android:background="@color/colorPrimary"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal"
+                                     >
+
+
+                                    <TextView
+                                        android:id="@+id/sno"
+                                        android:layout_width="65dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center"
+                                        android:padding="5dp"
+                                        android:text="S.NO"
+                                        android:textAlignment="center"
+                                        android:textColor="@color/white"
+                                        android:textStyle="bold" />
+
+                                    <View
+                                        android:layout_width="1dip"
+                                        android:layout_height="match_parent"
+                                        android:background="@color/white" />
+
+                                    <TextView
+                                        android:layout_width="80dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center"
+                                        android:padding="5dp"
+                                        android:text="PHOTO"
+                                        android:textAlignment="center"
+                                        android:textColor="@color/white"
+                                        android:textStyle="bold" />
+
+
+                                    <View
+                                        android:layout_width="1dip"
+                                        android:layout_height="match_parent"
+                                        android:background="@color/white" />
+
+                                    <TextView
+
+                                        android:layout_width="180dip"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center"
+                                        android:padding="5dp"
+                                        android:text="SID"
+                                        android:textAlignment="center"
+                                        android:textColor="@color/white"
+                                        android:textStyle="bold" />
+
+                                    <View
+                                        android:layout_width="1dip"
+                                        android:layout_height="match_parent"
+                                        android:background="@color/white" />
+
+                                    <TextView
+                                        android:id="@+id/fee_amount"
+                                        android:layout_width="250dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center"
+                                        android:padding="5dp"
+                                        android:text="STUDENT NAME"
+                                        android:textAlignment="center"
+                                        android:textColor="@color/white"
+                                        android:textStyle="bold" />
+
+                                    <View
+                                        android:layout_width="1dip"
+                                        android:layout_height="match_parent"
+                                        android:background="@color/white" />
+
+                                    <TextView
+                                        android:layout_width="150dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center"
+                                        android:padding="5dp"
+                                        android:text="BATCH"
+                                        android:textAlignment="center"
+                                        android:textColor="@color/white"
+                                        android:textStyle="bold" />
+
+
+                                </LinearLayout>
+
+
+                                <View
+                                    android:layout_width="match_parent"
+                                    android:layout_height="1dp"
+                                    android:background="@color/white" />
+
+                                <android.support.v4.widget.SwipeRefreshLayout
+
+                                    android:id="@+id/swipe_refresh_layout"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+
+
+
+
+                                    <android.support.v7.widget.RecyclerView
+                                        android:id="@+id/recycler_view"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:layout_above="@+id/footer"
+                                        android:layout_below="@+id/top_layout2"
+                                        android:background="@color/white"
+                                        android:layoutAnimation="@anim/layout_bottom_to_top_slide"
+                                        android:scrollbars="vertical" />
+
+                                </android.support.v4.widget.SwipeRefreshLayout>
+
+
+
+                            </LinearLayout>
+
+                        </HorizontalScrollView>
+
+
+
+
+
+                    </LinearLayout>
+
+
+            </LinearLayout>
+
+
+        //footer
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dip"
+                android:background="@color/white" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:background="@color/colorPrimaryDark"
+                android:gravity="center_horizontal|center_vertical"
+                android:padding="5dip"
+                android:text="@string/txt_footer"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#FFFFFF" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</android.support.design.widget.CoordinatorLayout>
+

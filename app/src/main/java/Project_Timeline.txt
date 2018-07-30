@@ -1,0 +1,38 @@
+*********** Project for vetri coaching centre ********************
+***************** Developing by Muthukumar N and Vidhya K ****************
+||
+||
+|| Project design started at
+||
+||
+|| 20/05/2017
+||          * Almost completed all layout designs - by Vidhya K & Kumar
+||
+||
+||
+|| 23/05/2017
+||          * Submitted design document to client
+||
+||               Below changes requested by client
+||                  -> spinr dropdown
+||                  -> beep sound - attendance
+||                  -> student delete
+||                  -> sid - CMP201701
+||                  -> print- pdf and excel
+||                  -> sms - send all - register
+||
+||
+|| 24/05/2017
+||          * Verified by Mr.Donnie and Client of Vetri coaching centre
+||          * Payment negotiation completed - quote 22k and advance 5k
+||
+||
+|| Next Client Demo date fixed to 15/06/2017 beta version
+||
+||
+|| 16/06/2017
+||          * Submitted trail apk to the client
+||          * Received changes from Donnir on 17/6/17
+||
+|| 18/06/2017
+||          * Working over changes

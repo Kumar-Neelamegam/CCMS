@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/items0"
+            android:actionMenuTextColor="@color/colorPrimary"
+            android:checked="false"
+            android:icon="@drawable/ic_menu_home"
+            android:title="@string/home" />
+
+        <item
+            android:id="@+id/items1"
+            android:actionMenuTextColor="@color/colorPrimary"
+            android:checked="false"
+            android:icon="@drawable/ic_menu_enroll_student"
+            android:title="@string/enroll_student" />
+
+        <item
+            android:id="@+id/items2"
+            android:actionMenuTextColor="@color/colorPrimary"
+            android:checked="false"
+            android:icon="@drawable/ic_menu_take_attendance"
+            android:title="@string/take_attendance" />
+
+        <item
+            android:id="@+id/items3"
+            android:actionMenuTextColor="@color/colorPrimary"
+            android:checked="false"
+            android:icon="@drawable/ic_menu_mark_entry"
+            android:title="@string/mark_list_entry" />
+
+        <item
+            android:id="@+id/items4"
+            android:actionMenuTextColor="@color/colorPrimary"
+            android:checked="false"
+            android:icon="@drawable/ic_menu_student_profile"
+            android:title="@string/student_profile" />
+
+        <item
+            android:id="@+id/items5"
+            android:actionMenuTextColor="@color/colorPrimary"
+            android:checked="false"
+            android:icon="@drawable/ic_menu_attendance_register"
+            android:title="@string/attendance_register" />
+
+
+        <item
+            android:id="@+id/items6"
+            android:actionMenuTextColor="@color/colorPrimary"
+            android:checked="false"
+            android:icon="@drawable/ic_menu_marks_register"
+            android:title="@string/mark_register" />
+
+        <item
+            android:id="@+id/items7"
+            android:actionMenuTextColor="@color/colorPrimary"
+            android:checked="false"
+            android:icon="@drawable/ic_menu_master"
+            android:title="@string/masters" />
+
+        <item
+            android:id="@+id/items8"
+            android:actionMenuTextColor="@color/colorPrimary"
+            android:checked="false"
+            android:icon="@drawable/ic_menu_reports"
+            android:title="@string/reports" />
+
+        <item
+            android:id="@+id/items9"
+            android:actionMenuTextColor="@color/white"
+            android:checked="false"
+            android:icon="@drawable/ic_menu_sms"
+            android:title="@string/send_sms" />
+
+
+        <item
+            android:id="@+id/items10"
+            android:actionMenuTextColor="@color/colorPrimary"
+            android:checked="false"
+            android:icon="@drawable/ic_menu_signout"
+            android:title="@string/exit" />
+
+
+
+
+    </group>
+
+</menu>

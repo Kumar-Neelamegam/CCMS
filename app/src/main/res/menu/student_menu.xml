@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/action_item1"
+        android:icon="@drawable/ic_menu_student_profile"
+        android:title="Profile"/>
+    <item
+        android:id="@+id/action_item2"
+        android:icon="@drawable/ic_menu_attendance_register"
+        android:title="Attendance"/>
+    <item
+        android:id="@+id/action_item3"
+        android:icon="@drawable/ic_menu_marks_register"
+        android:title="Marks"/>
+    <item
+        android:id="@+id/action_item4"
+        android:icon="@drawable/ic_fee_mst"
+        android:title="Fees"/>
+</menu>

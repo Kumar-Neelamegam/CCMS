@@ -1,0 +1,56 @@
+<resources>
+    <string name="app_name">CCMS</string>
+    <string name="app_name_extension">Coaching Center Management System</string>
+    <string name="txt_footer">Powered by Creativemindsz</string>
+    <string name="loading">Loading...</string>
+
+
+
+    <string name="home">Home</string>
+    <string name="please_wait">Please Wait</string>
+    <string name="information">Information</string>
+    <string name="alert">Alert</string>
+    <string name="message">Are your sure you want to exit?</string>
+    <string name="no">No</string>
+    <string name="yes">Yes</string>
+    <string name="runtime_permissions_txt">Please enable ALL permissions from app settings</string>
+    <string name="signout">Signout</string>
+    <string name="dashboard">Dashboard</string>
+    <string name="no_connection">No internet connectivity avaialble..try later..</string>
+    <string name="str_ok">Ok</string>
+    <string name="str_information">Information</string>
+    <string name="enroll_student">Enroll Students</string>
+    <string name="take_attendance">Take Attendance</string>
+    <string name="mark_list_entry">Mark List Entry</string>
+    <string name="student_profile">Students Profile</string>
+    <string name="attendance_register">Attendance Register</string>
+    <string name="mark_register">Mark Register</string>
+    <string name="masters">Masters</string>
+    <string name="reports">Reports</string>
+    <string name="send_sms">Send SMS</string>
+    <string name="exit">Exit</string>
+
+
+    <string-array name="sample">
+        <item name="hello 1"/>
+        <item name="hello 2"/>
+        <item name="hello 3"/>
+        <item name="hello 4"/>
+        <item name="hello 5"/>
+    </string-array>
+
+
+
+    <string-array name="sms_template">
+        <item name="Dear parent, we hereby notify you that ##content##"/>
+        <item name="Dear parent, here is an urgent announcement for you. ##content## thank you."/>
+    </string-array>
+
+    <string name="item1">Profile</string>
+    <string name="item2">Attendance</string>
+    <string name="item3">Marks</string>
+    <string name="item4">Fee</string>
+    <string name="str_total_count">Total Students Count:</string>
+
+
+</resources>
