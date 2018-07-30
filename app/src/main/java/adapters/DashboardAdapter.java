@@ -1,10 +1,8 @@
 package adapters;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -16,7 +14,6 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-
 import entry_activities.Enroll_Students;
 import entry_activities.Mark_Entry;
 import entry_activities.Send_SMS;
@@ -26,7 +23,6 @@ import registers_activities.Attendance_Register;
 import registers_activities.Mark_Register;
 import registers_activities.Students_Register;
 import reports.Reports;
-import utilities.Baseconfig;
 import vcc.coremodule.R;
 
 
@@ -247,8 +243,11 @@ public class DashboardAdapter  extends RecyclerView.Adapter<DashboardAdapter.Vie
             e.printStackTrace();
         }*/
 
-        Dialog dialog=Baseconfig.showCustomDialog("","",context);
-        dialog.show();
+       // Dialog dialog=Baseconfig.showCustomDialog("","",context);
+       // dialog.show();
+
+        Intent payment=new Intent(context, PaymentPage.class);
+        context.startActivity(payment);
 
 
     }

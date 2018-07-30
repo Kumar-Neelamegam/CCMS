@@ -8,6 +8,17 @@
     <color name="grey">#b4b4b4</color>
     <color name="green">#0f0</color>
 
+    <color name="dashboard_cardcolor1">#00b894</color>
+    <color name="dashboard_cardcolor2">#e84393</color>
+    <color name="dashboard_cardcolor3">#0984e3</color>
+
+
+    <color name="american_red">#d63031</color>
+    <color name="american_green">#00b894</color>
+    <color name="american_blue">#0984e3</color>
+    <color name="american_lite_orange">#e17055</color>
+
+
     <color name="brown">#7e7e7e</color>
 
     <color name="red">#f00</color>

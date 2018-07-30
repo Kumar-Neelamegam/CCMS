@@ -17,7 +17,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -101,7 +100,6 @@ public class DashboardNew extends Fragment {
 
             SendSMSNotification();
 
-
         } catch (Exception e) {
             e.printStackTrace();
 
@@ -124,7 +122,7 @@ public class DashboardNew extends Fragment {
                 {
                     //Baseconfig.SweetDialgos(3, getActivity(), "Information", "Get username and password from SMS INDIA HUB to send sms..\nadd it in profile..", "OK");
 
-                    Toast.makeText(getActivity(), "Get username and password from SMS INDIA HUB to send sms..\nadd it in profile..", Toast.LENGTH_SHORT).show();
+                   // Toast.makeText(getActivity(), "Get username and password from SMS INDIA HUB to send sms..\nadd it in profile..", Toast.LENGTH_SHORT).show();
                 }
             }
         } catch (Exception e) {

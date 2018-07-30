@@ -37,7 +37,21 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        //Dashboard_Activities =========================================================================
+
+        <service
+            android:name="utilities.MyFirebaseInstanceIdService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+            </intent-filter>
+        </service>
+
+        <service
+            android:name="utilities.MyFirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
+        <!--Dashboard_Activities =========================================================================-->
 
         <activity
             android:windowSoftInputMode="stateAlwaysHidden"
@@ -46,7 +60,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
 
 
-        //Entry_Activities =========================================================================
+        <!--Entry_Activities =========================================================================-->
 
         <activity
             android:windowSoftInputMode="stateAlwaysHidden"
@@ -89,8 +103,8 @@
             android:theme="@style/AppTheme.NoActionBar" />
 
 
-        //==========================================================================================
-        //Register_Activities
+
+        <!--//Register_Activities-->
         <activity
             android:windowSoftInputMode="stateAlwaysHidden"
             android:name="registers_activities.Attendance_Register"
@@ -190,6 +204,11 @@
 
         <activity
             android:name="reports.Reports_Mark"
+            android:windowSoftInputMode="stateAlwaysHidden"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name="adapters.PaymentPage"
             android:windowSoftInputMode="stateAlwaysHidden"
             android:theme="@style/AppTheme.NoActionBar" />
         //==========================================================================================

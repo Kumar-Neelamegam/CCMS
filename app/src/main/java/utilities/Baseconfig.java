@@ -23,7 +23,6 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
@@ -65,7 +64,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
-
 import vcc.coremodule.R;
 
 /**
@@ -73,6 +71,9 @@ import vcc.coremodule.R;
  */
 
 public class Baseconfig {
+
+
+    public static String CHANNEL_ID = "my_channel_01";
 
     public static String DATABASE_FILE_PATH = Environment.getExternalStorageDirectory().getPath() + "/vcc";
     public static String DATABASE_NAME = DATABASE_FILE_PATH + File.separator + "vcc.db";
@@ -1009,6 +1010,73 @@ public class Baseconfig {
     //#######################################################################################################
 
     /**
+     * GETTING INSTITUTUE OWNER INFO
+     */
+    public static String App_Id="";
+    public static String App_Institute_Name="";
+    public static String App_Institute_Address="";
+    public static String App_Mobile="";
+    public static String App_Owner_Name="";
+    public static String App_Logo="";
+    public static String App_Email="";
+    public static String App_ActDate="";
+    public static String App_EmailPassword="";
+    public static String App_SMSOption="";
+
+    public static void GetOwnerInfo() {
+        try {
+            SQLiteDatabase db = GetDb();
+            String Query = "select * from Bind_InstituteInfo where IsActive=1";
+            Cursor c = db.rawQuery(Query, null);
+            if (c != null) {
+                if (c.moveToFirst()) {
+                    do {
+
+                        App_Id=c.getString(c.getColumnIndex("Id"));
+                        App_Institute_Name=c.getString(c.getColumnIndex("Institute_Name"));
+                        App_Institute_Address=c.getString(c.getColumnIndex("Institute_Address"));
+                        App_Mobile=c.getString(c.getColumnIndex("Mobile"));
+                        App_Owner_Name=c.getString(c.getColumnIndex("Owner_Name"));
+                        App_Logo=c.getString(c.getColumnIndex("Logo"));
+                        App_Email=c.getString(c.getColumnIndex("Email"));
+                        App_EmailPassword=c.getString(c.getColumnIndex("EmailPassword"));
+                        App_SMSOption=c.getString(c.getColumnIndex("SMSOption"));
+
+                    } while (c.moveToNext());
+                }
+            }
+            db.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void sendSMS(String phoneNo, String msg, Context ctx) {
+        try {
+            SmsManager smsManager = SmsManager.getDefault();
+            smsManager.sendTextMessage(phoneNo, null, msg, null, null);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    } //#######################################################################################################
+
+    public static Dialog showCustomDialog(String title, String message, Context ctx) {
+        LayoutInflater inflater = LayoutInflater.from(ctx);
+        View inflatedLayout = inflater.inflate(R.layout.activity_purchase_layout, null, false);
+        Dialog builderDialog = new Dialog(ctx);
+        builderDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        TextView messageView = inflatedLayout.findViewById(R.id.message);
+        TextView titleView = inflatedLayout.findViewById(R.id.title);
+
+
+        builderDialog.setContentView(inflatedLayout);
+        builderDialog.setCancelable(false);
+        builderDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        builderDialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation2;
+        return builderDialog;
+    }
+
+    /**
      * http://www.itcuties.com/java/hashmap-example/
      * Java HashMap
      */
@@ -1075,6 +1143,8 @@ public class Baseconfig {
 
 
     }
+
+    //#######################################################################################################
 
     public String getValues(String Query) {
         String str = "";
@@ -1218,35 +1288,6 @@ public class Baseconfig {
             pw.flush();
             pw.close();
         }
-    }
-
-    //#######################################################################################################
-
-    public static void sendSMS(String phoneNo, String msg, Context ctx) {
-        try {
-            SmsManager smsManager = SmsManager.getDefault();
-            smsManager.sendTextMessage(phoneNo, null, msg, null, null);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    } //#######################################################################################################
-
-
-
-    public static Dialog showCustomDialog(String title, String message, Context ctx) {
-        LayoutInflater inflater = LayoutInflater.from(ctx);
-        View inflatedLayout = inflater.inflate(R.layout.activity_purchase_layout, null, false);
-        Dialog builderDialog = new Dialog(ctx);
-        builderDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        TextView messageView = inflatedLayout.findViewById(R.id.message);
-        TextView titleView = inflatedLayout.findViewById(R.id.title);
-
-
-        builderDialog.setContentView(inflatedLayout);
-        builderDialog.setCancelable(false);
-        builderDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        builderDialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation2;
-        return builderDialog;
     }
 
 
