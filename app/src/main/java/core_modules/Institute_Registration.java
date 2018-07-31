@@ -297,9 +297,15 @@ public class Institute_Registration extends AppCompatActivity implements Imageut
         db.insert("Bind_InstituteInfo", null, values);
         db.close();
 
-        
+        PushtoFireBase();
 
         ShowSuccessDialog();
+
+    }
+
+    private void PushtoFireBase() {
+
+        
 
     }
 
