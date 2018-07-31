@@ -62,5 +62,12 @@ dependencies {
     implementation 'com.google.zxing:core:3.3.0'
     implementation 'com.google.firebase:firebase-messaging:17.1.0'
     implementation 'com.google.gms:google-services:4.0.2'
+
+    // FirebaseUI for Firebase Auth
+    implementation 'com.firebaseui:firebase-ui-auth:4.1.0'
+
+    // https://mvnrepository.com/artifact/com.facebook.android/facebook-login
+    implementation group: 'com.facebook.android', name: 'facebook-login', version: '4.27.0'
+
 }
 

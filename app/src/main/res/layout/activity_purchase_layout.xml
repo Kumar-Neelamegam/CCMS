@@ -201,6 +201,7 @@
                             android:textColor="@color/black" />
 
                         <TextView
+                            android:id="@+id/txtvw_cardname"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/spacing_medium"
@@ -354,6 +355,7 @@
                             android:textColor="@color/black" />
 
                         <TextView
+                            android:id="@+id/customer_name2"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/spacing_medium"

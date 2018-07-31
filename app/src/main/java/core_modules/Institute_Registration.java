@@ -8,10 +8,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatEditText;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.EditText;
@@ -20,9 +18,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.TextView;
 
-import com.daimajia.easing.linear.Linear;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog;
 
 import java.io.File;
@@ -65,6 +63,10 @@ public class Institute_Registration extends AppCompatActivity implements Imageut
     RadioGroup SMSOptions;
     RadioButton MobileSMS, GatewaySMS;
     LinearLayout SMSGatewayLayout;
+
+    FirebaseAuth auth;
+    FirebaseUser mFirebaseUser;
+
     //*********************************************************************************************
 
     @Override
@@ -91,6 +93,10 @@ public class Institute_Registration extends AppCompatActivity implements Imageut
 
     //**********************************************************************************************
     private void GetInitialize() {
+
+        auth=FirebaseAuth.getInstance();
+        mFirebaseUser=auth.getCurrentUser();
+
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -125,6 +131,14 @@ public class Institute_Registration extends AppCompatActivity implements Imageut
         GatewaySMS= findViewById(R.id.radiobutton_smsgateway);
         SMSGatewayLayout= findViewById(R.id.smsgateway_layout);
 
+        try {
+            Ins_own.setText(mFirebaseUser.getDisplayName());
+            Ins_email.setText(mFirebaseUser.getEmail());
+            Ins_email.setEnabled(false);
+            Ins_mobile.setText(mFirebaseUser.getPhoneNumber());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -278,9 +292,12 @@ public class Institute_Registration extends AppCompatActivity implements Imageut
         values.put("IsActive", Str_Isactive);
         values.put("IsUpdate", "0");
         values.put("ActDate", Baseconfig.GetDate());
+        values.put("UID", mFirebaseUser.getUid());
 
         db.insert("Bind_InstituteInfo", null, values);
         db.close();
+
+        
 
         ShowSuccessDialog();
 

@@ -9,18 +9,26 @@ import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
+import com.firebase.ui.auth.AuthUI;
+import com.firebase.ui.auth.IdpResponse;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog;
 
-import io.fabric.sdk.android.Fabric;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Arrays;
+import java.util.List;
 
+import io.fabric.sdk.android.Fabric;
 import utilities.Baseconfig;
 import utilities.RuntimePermissionsActivity;
 import vcc.coremodule.R;
@@ -28,6 +36,11 @@ import vcc.coremodule.R;
 public class Splash extends RuntimePermissionsActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
 
 
+    private static final int RC_SIGN_IN = 123;
+    private static final int REQUEST_PERMISSIONS = 200;
+    //****************************************************************************
+    //Copying database
+    public Copydatabase copydb = new Copydatabase();
     /**
      * Created at 15/05/2017
      * Muthukumar N & Vidhya K
@@ -37,10 +50,15 @@ public class Splash extends RuntimePermissionsActivity implements ActivityCompat
     ProgressBar progressBar;
     int progress;
     TextView progress_status;
-    int progressStatus = 0;
-    Handler handler = new Handler();
+
 
     //****************************************************************************
+    int progressStatus = 0;
+    Handler handler = new Handler();
+    //****************************************************************************
+    //Initialization
+    private FirebaseAuth mFirebaseAuth;
+    private FirebaseUser mFirebaseUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,11 +98,8 @@ public class Splash extends RuntimePermissionsActivity implements ActivityCompat
         // Do Here what ever you want do on back press;
     }
 
-    //****************************************************************************
-    //Copying database
-    public Copydatabase copydb = new Copydatabase();
-
     public void init() {
+
 
         File f = new File(Baseconfig.DATABASE_FILE_PATH);
 
@@ -115,11 +130,12 @@ public class Splash extends RuntimePermissionsActivity implements ActivityCompat
 
     }
 
-
     //****************************************************************************
-    //Initialization
 
     public void GetInitialize() {
+
+        mFirebaseAuth = FirebaseAuth.getInstance();
+        mFirebaseUser = mFirebaseAuth.getCurrentUser();
 
         YoYo.with(Techniques.BounceIn).duration(2500).playOn(findViewById(R.id.logo));
 
@@ -136,8 +152,6 @@ public class Splash extends RuntimePermissionsActivity implements ActivityCompat
 
 
     }
-
-    //****************************************************************************
 
     public void LoadNextActivity() {
 
@@ -161,19 +175,26 @@ public class Splash extends RuntimePermissionsActivity implements ActivityCompat
 
                         try {
 
-
                             String Query = "select Id as dstatus from Bind_InstituteInfo";
-                            boolean b = Baseconfig.LoadBooleanStatus(Query);
+                            boolean Registration = Baseconfig.LoadBooleanStatus(Query);
 
-                            if (b) {
+                            if (mFirebaseUser != null && Registration) { //both case passed {login, registration}
+
                                 finish();
                                 Intent intent = new Intent(Splash.this, Task_Navigation.class);
                                 startActivity(intent);
 
-                            } else {
+                            } else if (mFirebaseUser != null) //
+                            {
+
                                 finish();
                                 Intent intent = new Intent(Splash.this, Institute_Registration.class);
+
                                 startActivity(intent);
+
+                            } else {
+
+                                DoLogin();
 
                             }
 
@@ -200,10 +221,60 @@ public class Splash extends RuntimePermissionsActivity implements ActivityCompat
         }).start();
 
     }
+
+    private void DoLogin() {
+
+        //send user to the login page
+        List<AuthUI.IdpConfig> providers = Arrays.asList(
+                new AuthUI.IdpConfig.GoogleBuilder().build(),
+                new AuthUI.IdpConfig.FacebookBuilder().build());
+
+
+        // Create and launch sign-in intent
+        startActivityForResult(
+                AuthUI.getInstance()
+                        .createSignInIntentBuilder()
+                        .setLogo(R.drawable.logo_vcc)
+                        .setTheme(R.style.AppTheme_NoActionBar)
+                        .setAvailableProviders(providers)
+                        .build(),
+                RC_SIGN_IN);
+
+
+    }
+
 //****************************************************************************
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
-    private static final int REQUEST_PERMISSIONS = 200;
+        if (requestCode == RC_SIGN_IN) {
+            IdpResponse response = IdpResponse.fromResultIntent(data);
+            if (resultCode == RESULT_OK) {
+                // Successfully signed in
+                Toast.makeText(Splash.this, "Signing In Success", Toast.LENGTH_LONG).show();
+                startActivity(new Intent(Splash.this, Institute_Registration.class));
+                finish();
+            } else {
+                // Sign in failed, check response for error code
+                // Baseconfig.SweetDialgos(4,Splash.this, "Information", "Signin Failed (or) check your data connection...", "OK");
+                new SweetAlertDialog(Splash.this, SweetAlertDialog.WARNING_TYPE)
+                        .setTitleText("Information")
+                        .setContentText("Signin Failed (or) check your data connection...")
+                        .setConfirmText("OK")
+                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                sweetAlertDialog.dismiss();
+                                Splash.this.finishAffinity();
+                            }
+                        })
+                        .show();
+
+            }
+        }
+    }
 
     public void isStoragePermissionGranted() {
 
@@ -225,6 +296,49 @@ public class Splash extends RuntimePermissionsActivity implements ActivityCompat
     }
 
     //***************************************************************************************************
+
+    private void copyLogoFileAssets() {
+
+        try {
+            InputStream is = Splash.this.getApplicationContext().getAssets().open("logo_vcc.jpg");
+
+            // Copy the database into the destination
+            OutputStream os = new FileOutputStream(Baseconfig.DATABASE_FILE_PATH + "/logo_vcc.jpg");
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = is.read(buffer)) > 0) {
+                os.write(buffer, 0, length);
+            }
+            os.flush();
+
+
+            os.close();
+            is.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        try {
+            InputStream is = Splash.this.getApplicationContext().getAssets().open("male_avatar.png");
+
+            // Copy the database into the destination
+            OutputStream os = new FileOutputStream(Baseconfig.DATABASE_FILE_PATH + "/male_avatar.jpg");
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = is.read(buffer)) > 0) {
+                os.write(buffer, 0, length);
+            }
+            os.flush();
+
+
+            os.close();
+            is.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
 
     public class Copydatabase extends AsyncTask<Void, Void, Void> {
 
@@ -276,8 +390,7 @@ public class Splash extends RuntimePermissionsActivity implements ActivityCompat
             // Check if the database exists before copying
             boolean initialiseDatabase = (new File(DB_DESTINATION)).exists();
 
-            if (initialiseDatabase == false)
-            {
+            if (initialiseDatabase == false) {
                 Log.i("Processing...", "Copying Database");
                 // Open the .db file in your assets directory
                 InputStream is = Splash.this.getApplicationContext().getAssets().open("vcc.db");
@@ -300,55 +413,6 @@ public class Splash extends RuntimePermissionsActivity implements ActivityCompat
 
         }
 
-
-
-
-    }
-
-
-    private void copyLogoFileAssets() {
-
-        try {
-            InputStream is = Splash.this.getApplicationContext().getAssets().open("logo_vcc.jpg");
-
-            // Copy the database into the destination
-            OutputStream os = new FileOutputStream(Baseconfig.DATABASE_FILE_PATH+ "/logo_vcc.jpg");
-            byte[] buffer = new byte[1024];
-            int length;
-            while ((length = is.read(buffer)) > 0) {
-                os.write(buffer, 0, length);
-            }
-            os.flush();
-
-
-
-            os.close();
-            is.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
-
-        try {
-            InputStream is = Splash.this.getApplicationContext().getAssets().open("male_avatar.png");
-
-            // Copy the database into the destination
-            OutputStream os = new FileOutputStream(Baseconfig.DATABASE_FILE_PATH+ "/male_avatar.jpg");
-            byte[] buffer = new byte[1024];
-            int length;
-            while ((length = is.read(buffer)) > 0) {
-                os.write(buffer, 0, length);
-            }
-            os.flush();
-
-
-
-            os.close();
-            is.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
     }
 

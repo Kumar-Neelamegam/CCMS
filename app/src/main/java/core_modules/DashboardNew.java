@@ -100,6 +100,8 @@ public class DashboardNew extends Fragment {
 
             SendSMSNotification();
 
+            Baseconfig.GetOwnerInfo();
+
         } catch (Exception e) {
             e.printStackTrace();
 
