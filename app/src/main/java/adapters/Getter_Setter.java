@@ -697,5 +697,83 @@ public class Getter_Setter {
 
     //**********************************************************************************************
 
+    //**********************************************************************************************
 
-}
+    public class Pricing {
+
+        String noOfstudent="0";
+        String perStudent="0";
+        String cardName="";
+        String totalPrice="";
+        String cardType="";
+        String cardColor="";
+        String payId;
+
+        public String getCardColor() {
+            return cardColor;
+        }
+
+        public void setCardColor(String cardColor) {
+            this.cardColor = cardColor;
+        }
+
+        public String getPayId() {
+            return payId;
+        }
+
+        public void setPayId(String payId) {
+            this.payId = payId;
+        }
+
+        public Pricing(String noOfstudent, String perStudent, String cardName, String totalPrice, String cardType) {
+            this.noOfstudent = noOfstudent;
+            this.perStudent = perStudent;
+            this.cardName = cardName;
+            this.totalPrice = totalPrice;
+            this.cardType = cardType;
+        }
+
+        public String getNoOfstudent() {
+            return noOfstudent;
+        }
+
+        public void setNoOfstudent(String noOfstudent) {
+            this.noOfstudent = noOfstudent;
+        }
+
+        public String getPerStudent() {
+            return perStudent;
+        }
+
+        public void setPerStudent(String perStudent) {
+            this.perStudent = perStudent;
+        }
+
+        public String getCardName() {
+            return cardName;
+        }
+
+        public void setCardName(String cardName) {
+            this.cardName = cardName;
+        }
+
+        public String getTotalPrice() {
+            return totalPrice;
+        }
+
+        public void setTotalPrice(String totalPrice) {
+            this.totalPrice = totalPrice;
+        }
+
+        public String getCardType() {
+            return cardType;
+        }
+
+        public void setCardType(String cardType) {
+            this.cardType = cardType;
+        }
+    }
+    //**********************************************************************************************
+
+
+}//END

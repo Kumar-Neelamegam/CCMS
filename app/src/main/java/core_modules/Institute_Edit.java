@@ -16,6 +16,9 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 
 import com.bumptech.glide.Glide;
 import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog;
@@ -52,10 +55,16 @@ public class Institute_Edit extends AppCompatActivity implements Imageutils.Imag
 
     ImageView Back;
 
-    EditText Ins_name, Ins_add, Ins_own, Ins_mobile, Ins_email;
+    EditText Ins_name, Ins_add, Ins_own, Ins_mobile, Ins_email,  SMS_SID, SMS_username, SMS_password;;
 
 
     ImageView Logo_Imgvw;
+
+
+
+    RadioGroup SMSOptions;
+    RadioButton MobileSMS, GatewaySMS;
+    LinearLayout SMSGatewayLayout;
     //*********************************************************************************************
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,6 +116,17 @@ public class Institute_Edit extends AppCompatActivity implements Imageutils.Imag
             Ins_email = findViewById(R.id.edt_email);
             Logo_Imgvw = findViewById(R.id.img_logo);
 
+            SMS_username = findViewById(R.id.edt_sms_username);
+            SMS_password = findViewById(R.id.edt_sms_password);
+            SMS_SID = findViewById(R.id.edt_sms_sid);
+
+
+            SMSOptions = findViewById(R.id.radiogroup_smsoptions);
+            MobileSMS = findViewById(R.id.radiobutton_mobile_sms);
+            GatewaySMS = findViewById(R.id.radiobutton_smsgateway);
+            SMSGatewayLayout = findViewById(R.id.smsgateway_layout);
+
+
             LoadValues();
 
         } catch (Exception e) {
@@ -121,51 +141,74 @@ public class Institute_Edit extends AppCompatActivity implements Imageutils.Imag
     public void LoadValues()
     {
 
-        String Logo="",Institute_Name="",Institute_Address="",Mobile="",OwnerName="",Email="",Reg_Date="";
+        try {
+            String SMSUsername="";
+            String SMSPassword="";
+            String SMSSID="";
+            String SMSOption="";
 
-        String Ret_Value="";
-        SQLiteDatabase db= Baseconfig.GetDb();
-        String Query="select * from Bind_InstituteInfo";
-        Cursor c=db.rawQuery(Query,null);
-        if(c!=null) {
-            if (c.moveToFirst()) {
-                do {
+            String Logo="",Institute_Name="",Institute_Address="",Mobile="",OwnerName="",Email="",Reg_Date="";
 
-                    Logo=c.getString(c.getColumnIndex("Logo"));
-                    Institute_Name=c.getString(c.getColumnIndex("Institute_Name"));
-                    Institute_Address=c.getString(c.getColumnIndex("Institute_Address"));
-                    Mobile=c.getString(c.getColumnIndex("Mobile"));
-                    OwnerName=c.getString(c.getColumnIndex("Owner_Name"));
-                    Email=c.getString(c.getColumnIndex("Email"));
-                    Reg_Date=c.getString(c.getColumnIndex("ActDate"));
+            String Ret_Value="";
+            SQLiteDatabase db= Baseconfig.GetDb();
+            String Query="select * from Bind_InstituteInfo";
+            Cursor c=db.rawQuery(Query,null);
+            if(c!=null) {
+                if (c.moveToFirst()) {
+                    do {
 
-                } while (c.moveToNext());
+                        Logo=c.getString(c.getColumnIndex("Logo"));
+                        Institute_Name=c.getString(c.getColumnIndex("Institute_Name"));
+                        Institute_Address=c.getString(c.getColumnIndex("Institute_Address"));
+                        Mobile=c.getString(c.getColumnIndex("Mobile"));
+                        OwnerName=c.getString(c.getColumnIndex("Owner_Name"));
+                        Email=c.getString(c.getColumnIndex("Email"));
+                        Reg_Date=c.getString(c.getColumnIndex("ActDate"));
+
+                        SMSUsername=c.getString(c.getColumnIndex("SMSUsername"));
+                        SMSPassword=c.getString(c.getColumnIndex("SMSPassword"));
+                        SMSSID=c.getString(c.getColumnIndex("SMSSID"));
+                        SMSOption=c.getString(c.getColumnIndex("SMSOption"));
+
+                    } while (c.moveToNext());
+                }
             }
+            c.close();
+            db.close();
+
+            if(SMSOption.equals("1"))//Mobile
+            {
+                MobileSMS.setChecked(true);
+            }else
+            {
+                GatewaySMS.setChecked(true);
+            }
+
+
+            Ins_name.setText(Institute_Name);
+            Ins_add.setText(Institute_Address);
+            Ins_own.setText(OwnerName);
+            Ins_mobile.setText(Mobile);
+            Ins_email.setText(Email);
+
+            Baseconfig.LogoImgPath=Logo;
+
+            if(iv_attachment.toString().length()>0)
+            {
+                Glide.with(iv_attachment.getContext()).load(new File(Logo)).into(iv_attachment);
+
+            }
+            else
+            {
+                Glide.with(iv_attachment.getContext()).load(Uri.parse("file:///android_asset/logo_vcc.png")).into(iv_attachment);
+            }
+
+            SMS_username.setText(SMSUsername);
+            SMS_password.setText(SMSPassword);
+            SMS_SID.setText(SMSSID);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        c.close();
-        db.close();
-
-
-
-        Ins_name.setText(Institute_Name);
-        Ins_add.setText(Institute_Address);
-        Ins_own.setText(OwnerName);
-        Ins_mobile.setText(Mobile);
-        Ins_email.setText(Email);
-
-        Baseconfig.LogoImgPath=Logo;
-
-        if(iv_attachment.toString().length()>0)
-        {
-            Glide.with(iv_attachment.getContext()).load(new File(Logo)).into(iv_attachment);
-
-        }
-        else
-        {
-            Glide.with(iv_attachment.getContext()).load(Uri.parse("file:///android_asset/logo_vcc.png")).into(iv_attachment);
-        }
-
-
 
 
     }
@@ -174,6 +217,18 @@ public class Institute_Edit extends AppCompatActivity implements Imageutils.Imag
 
 
     void Controllisteners() {
+
+        SMSOptions.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                if (MobileSMS.isChecked()) {
+                    SMSGatewayLayout.setVisibility(View.GONE);
+                } else {
+                    SMSGatewayLayout.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
         imgbtn_capture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -175,6 +175,8 @@ public class Splash extends RuntimePermissionsActivity implements ActivityCompat
 
                         try {
 
+
+
                             String Query = "select Id as dstatus from Bind_InstituteInfo";
                             boolean Registration = Baseconfig.LoadBooleanStatus(Query);
 
@@ -224,21 +226,27 @@ public class Splash extends RuntimePermissionsActivity implements ActivityCompat
 
     private void DoLogin() {
 
-        //send user to the login page
-        List<AuthUI.IdpConfig> providers = Arrays.asList(
-                new AuthUI.IdpConfig.GoogleBuilder().build(),
-                new AuthUI.IdpConfig.FacebookBuilder().build());
+        try {
+            //send user to the login page
+            List<AuthUI.IdpConfig> providers = Arrays.asList(
+                    new AuthUI.IdpConfig.GoogleBuilder().build(),
+                    new AuthUI.IdpConfig.FacebookBuilder().build());
 
 
-        // Create and launch sign-in intent
-        startActivityForResult(
-                AuthUI.getInstance()
-                        .createSignInIntentBuilder()
-                        .setLogo(R.drawable.logo_vcc)
-                        .setTheme(R.style.AppTheme_NoActionBar)
-                        .setAvailableProviders(providers)
-                        .build(),
-                RC_SIGN_IN);
+            // Create and launch sign-in intent
+            startActivityForResult(
+                    AuthUI.getInstance()
+                            .createSignInIntentBuilder()
+                            .setLogo(R.drawable.logo_vcc)
+                            .setTheme(R.style.AppTheme_NoActionBar)
+                            .setAvailableProviders(providers)
+                            .build(),
+                    RC_SIGN_IN);
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
 
 
     }

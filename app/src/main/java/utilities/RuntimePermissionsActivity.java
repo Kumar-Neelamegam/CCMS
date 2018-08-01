@@ -6,6 +6,14 @@ package utilities;
 
 
 import android.content.Intent;
+import android.app.Activity;
+import instamojo.library.InstapayListener;
+import instamojo.library.InstamojoPay;
+import instamojo.library.Config;
+import org.json.JSONObject;
+import org.json.JSONException;
+import android.content.IntentFilter;
+import android.widget.Toast;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -23,7 +31,6 @@ import android.view.View;
  */
 public abstract class RuntimePermissionsActivity extends AppCompatActivity {
     private SparseIntArray mErrorString;
-
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

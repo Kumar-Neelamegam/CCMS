@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
@@ -17,6 +18,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -25,6 +31,8 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import adapters.DashboardAdapter;
 import adapters.Getter_Setter;
@@ -102,6 +110,12 @@ public class DashboardNew extends Fragment {
 
             Baseconfig.GetOwnerInfo();
 
+          //  addNewContact();
+
+         //   ReadSingleContact();
+
+           // addPlans();
+
         } catch (Exception e) {
             e.printStackTrace();
 
@@ -109,6 +123,124 @@ public class DashboardNew extends Fragment {
 
         return v;
     }
+
+
+    /** Create cities collection and add sample documents. */
+    private void addNewContact() {
+
+        try {
+            FirebaseFirestore db=FirebaseFirestore.getInstance();
+
+            Map<String, Object> newContact = new HashMap<>();
+            newContact.put("Name", "John");
+            newContact.put("Email", "john@gmail.com");
+            newContact.put("PhoneNO", "080-0808-009");
+
+            db.collection("Purchases").document("ponnar@gmail.com").set(newContact)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Toast.makeText(getActivity(), "User Registered", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(getActivity(), "ERROR" + e.toString(), Toast.LENGTH_SHORT).show();
+                            Log.d("TAG", e.toString());
+                        }
+                    });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    private void addPlans() {
+
+        try {
+            FirebaseFirestore db=FirebaseFirestore.getInstance();
+
+            Map<String, Object> newContact = new HashMap<>();
+
+            newContact = new HashMap<>();
+            newContact.put("cardcolor", "#fed330");
+            newContact.put("payid", "");
+            newContact.put("perstudent", "10.Rs");
+            newContact.put("plantitle", "BASIC");
+            newContact.put("totalprice", "3250");
+            newContact.put("validupto", "350 students");
+
+            db.collection(Baseconfig.FIREBASE_PLANS).document().set(newContact)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Toast.makeText(getActivity(), "Plans added", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(getActivity(), "ERROR" + e.toString(), Toast.LENGTH_SHORT).show();
+                            Log.d("TAG", e.toString());
+                        }
+                    });
+
+
+            newContact = new HashMap<>();
+            newContact.put("cardcolor", "#fd9644");
+            newContact.put("payid", "");
+            newContact.put("perstudent", "8.Rs");
+            newContact.put("plantitle", "PRO");
+            newContact.put("totalprice", "5600");
+            newContact.put("validupto", "700 students");
+
+            db.collection(Baseconfig.FIREBASE_PLANS).document().set(newContact)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Toast.makeText(getActivity(), "Plans added", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(getActivity(), "ERROR" + e.toString(), Toast.LENGTH_SHORT).show();
+                            Log.d("TAG", e.toString());
+                        }
+                    });
+
+
+            newContact = new HashMap<>();
+            newContact.put("cardcolor", "#26de81");
+            newContact.put("payid", "");
+            newContact.put("perstudent", "N/A");
+            newContact.put("plantitle", "ULTIMATE");
+            newContact.put("totalprice", "10600");
+            newContact.put("validupto", "Unlimited students");
+
+            db.collection(Baseconfig.FIREBASE_PLANS).document().set(newContact)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Toast.makeText(getActivity(), "Plans added", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(getActivity(), "ERROR" + e.toString(), Toast.LENGTH_SHORT).show();
+                            Log.d("TAG", e.toString());
+                        }
+                    });
+
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
     //*********************************************************************************************
 
@@ -508,22 +640,32 @@ public class DashboardNew extends Fragment {
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity(), 3);
         recyclerView.setLayoutManager(layoutManager);
 
-      //  Toast.makeText(getActivity(), "Your Mac/UDID Address: "+ MAC_ADDRESS +" / "+ UUID, Toast.LENGTH_SHORT).show();
-        if(MAC_ADDRESS.equals("02:00:00:00:00:00") && UUID.equals("963ca4d22c2831bd")) //MAC ADDRESS FOUND
-        {
 
+        String Query = "select IsPaid as dstatus1 from Bind_InstituteInfo where IsPaid=1 and UID='"+Baseconfig.App_UID+"'";
+        boolean getPaidStatus = Baseconfig.LoadReportsBooleanStatus(Query);
+        if(getPaidStatus)//IF PAID NA GO HEAD
+        {
+            //get total count and check for expiry
+            int getStudentsCount = Integer.parseInt(Baseconfig.LoadValue("select StudentCount as dstatus from Bind_InstituteInfo where IsPaid=1 and UID='"+Baseconfig.App_UID+"'"));
+            int getCurrentPlanCount = Integer.parseInt(Baseconfig.LoadValue("select count(Id) as dstatus from Bind_EnrollStudents"));
+            if(getCurrentPlanCount==getStudentsCount)
+            {
+
+            }else//inform user about expiry
+            {
+
+            }
             ArrayList<Getter_Setter.Dashboard_Dataobjects> DataItems = prepareData();
             DashboardAdapter adapter = new DashboardAdapter(getActivity(), DataItems, SESSION_DATABASE, true);
             recyclerView.setAdapter(adapter);
 
         }
-        else//MAC ADDRESS NOT FOUND - dummy adapter
+        else//TRAIL USERS
         {
 
             ArrayList<Getter_Setter.Dashboard_Dataobjects> DataItems = prepareData();
             DashboardAdapter adapter = new DashboardAdapter(getActivity(), DataItems, SESSION_DATABASE,false);
             recyclerView.setAdapter(adapter);
-
         }
 
 

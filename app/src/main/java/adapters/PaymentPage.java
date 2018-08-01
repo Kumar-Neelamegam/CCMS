@@ -1,30 +1,32 @@
 package adapters;
 
-import android.app.Activity;
-import android.content.IntentFilter;
-import android.database.sqlite.SQLiteDatabase;
+import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
-import android.widget.Button;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
-import instamojo.library.InstamojoPay;
-import instamojo.library.InstapayListener;
+import java.util.ArrayList;
+import java.util.List;
+
 import utilities.Baseconfig;
 import vcc.coremodule.R;
 
 public class PaymentPage extends AppCompatActivity {
 
 
-    Button Button_Basic, Button_Pro, Button_Ultimate;
-    TextView CustomerName;
-    InstapayListener listener;
+    RecyclerView recycler_view;
 
     //*********************************************************************************************
     @Override
@@ -36,6 +38,7 @@ public class PaymentPage extends AppCompatActivity {
         try {
             GetInitialize();
             Controllisteners();
+            LoadRecycler();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -43,28 +46,53 @@ public class PaymentPage extends AppCompatActivity {
 
     }
 
+    ProgressDialog dialog;
+    private void LoadRecycler() {
+
+        dialog=new ProgressDialog(this);
+       dialog.setMessage("Loading plans");
+       dialog.setCancelable(false);
+       dialog.show();
+
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection(Baseconfig.FIREBASE_PLANS).orderBy("payid",Query.Direction.ASCENDING).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+
+                    List<Plans_Data> plans_data = new ArrayList<>();
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        plans_data.add(document.toObject(Plans_Data.class));
+                    }
+                    Log.e("List of plans: ", plans_data.toString());
+
+                    recycler_view = findViewById(R.id.recycler_view);
+                    recycler_view.setHasFixedSize(true);
+                    RecyclerView.LayoutManager layoutManager = new GridLayoutManager(PaymentPage.this, 1);
+                    recycler_view.setLayoutManager(layoutManager);
+
+                    Plans_Adapter adapter = new Plans_Adapter(plans_data, PaymentPage.this);
+                    recycler_view.setAdapter(adapter);
+
+                    dialog.dismiss();
+
+
+                } else {
+                    Log.e("Getting documents: ", "Error getting documents: ", task.getException());
+                }
+            }
+        });
+
+
+
+
+
+    }
+
+
     private void Controllisteners() {
 
-        String email = Baseconfig.App_Email;
-        String phone = Baseconfig.App_Mobile;
-        String purpose = getString(R.string.app_name);
-        String buyername = Baseconfig.App_Owner_Name;
-
-        Button_Basic.setOnClickListener(v -> {
-            String amount = "3250";
-            callInstamojoPay(email, phone, amount, purpose, buyername);
-        });
-        Button_Pro.setOnClickListener(v -> {
-            String amount = "5600";
-            callInstamojoPay(email, phone, amount, purpose, buyername);
-
-        });
-
-        Button_Ultimate.setOnClickListener(v -> {
-            String amount = "10600";
-            callInstamojoPay(email, phone, amount, purpose, buyername);
-
-        });
 
     }
 
@@ -75,13 +103,9 @@ public class PaymentPage extends AppCompatActivity {
             getSupportActionBar().setTitle("PLANS");
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-            Button_Basic = findViewById(R.id.bttn_pay1);
-            Button_Pro = findViewById(R.id.bttn_pay2);
-            Button_Ultimate = findViewById(R.id.bttn_pay3);
-            CustomerName = (TextView) findViewById(R.id.txtvw_cardname);
 
-            String GetCustomerName = Baseconfig.LoadValue("select Institute_Name as dstatus from Bind_InstituteInfo");
-            CustomerName.setText(GetCustomerName);
+            recycler_view = (RecyclerView) findViewById(R.id.recycler_view);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -107,51 +131,6 @@ public class PaymentPage extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    private void callInstamojoPay(String email, String phone, String amount, String purpose, String buyername) {
-        final Activity activity = this;
-        InstamojoPay instamojoPay = new InstamojoPay();
-        IntentFilter filter = new IntentFilter("ai.devsupport.instamojo");
-        registerReceiver(instamojoPay, filter);
-        JSONObject pay = new JSONObject();
-        try {
-            pay.put("email", email);
-            pay.put("phone", phone);
-            pay.put("purpose", purpose);
-            pay.put("amount", amount);
-            pay.put("name", buyername);
-            pay.put("send_sms", true);
-            pay.put("send_email", true);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        initListener();
-        instamojoPay.start(activity, pay, listener);
-    }
-
-    private void initListener() {
-        listener = new InstapayListener() {
-            @Override
-            public void onSuccess(String response) {
-
-
-                Toast.makeText(getApplicationContext(), response, Toast.LENGTH_LONG).show();
-                SQLiteDatabase db = Baseconfig.GetDb();
-                db.execSQL("Update Bind_InstituteInfo set IsPaid=1, PaidDate='', StudentCount=''");//if ispaid==1
-                db.close();
-
-            }
-
-            @Override
-            public void onFailure(int code, String reason) {
-
-                Toast.makeText(getApplicationContext(), "Failed: " + reason, Toast.LENGTH_LONG).show();
-                SQLiteDatabase db = Baseconfig.GetDb();
-                db.execSQL("Update Bind_InstituteInfo set IsPaid=0");//if ispaid==1
-                db.close();
-            }
-        };
     }
 
 

@@ -19,7 +19,6 @@ import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -27,7 +26,6 @@ import android.widget.DatePicker;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RadioButton;
-import android.widget.Toast;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
@@ -40,7 +38,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.EnumMap;
 import java.util.List;
@@ -48,20 +45,12 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
-import javax.security.auth.Subject;
-
-
 import core_modules.Task_Navigation;
 import utilities.Baseconfig;
 import utilities.Imageutils;
 import vcc.coremodule.R;
 
-import static android.R.id.list;
-import static java.lang.Integer.parseInt;
 import static utilities.Baseconfig.GetDb;
-import static vcc.coremodule.R.id.edt_examno;
-import static vcc.coremodule.R.id.items1;
-import static vcc.coremodule.R.id.items2;
 
 
 public class Enroll_Students extends AppCompatActivity implements Imageutils.ImageAttachmentListener {
@@ -112,71 +101,75 @@ public class Enroll_Students extends AppCompatActivity implements Imageutils.Ima
     //**********************************************************************************************
 
     private void GetInitialize() {
-        toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        try {
+            toolbar = findViewById(R.id.toolbar);
+            setSupportActionBar(toolbar);
 
-        Back = findViewById(R.id.toolbar_back);
-        Exit = findViewById(R.id.ic_exit);
+            Back = findViewById(R.id.toolbar_back);
+            Exit = findViewById(R.id.ic_exit);
 
-        photo = findViewById(R.id.img_photo);
-        camera = findViewById(R.id.imgbtn_capture1);
+            photo = findViewById(R.id.img_photo);
+            camera = findViewById(R.id.imgbtn_capture1);
 
-        name = findViewById(R.id.edt_name);
-        dob = findViewById(R.id.edt_dob);
-        fat_name = findViewById(R.id.edt_fatherrname);
-        mot_name = findViewById(R.id.edt_motname);
-        occupation = (AppCompatAutoCompleteTextView) findViewById(R.id.edt_occupation);
-        occupation.setThreshold(1);
-        mother_occupation = (AppCompatAutoCompleteTextView) findViewById(R.id.edt_mother_occupation);
-        mother_occupation.setThreshold(1);
-        address = findViewById(R.id.edt_address);
-        mobile = findViewById(R.id.edt_mobileno);
-        subject = findViewById(R.id.edt_subject);
-        choose_batch = findViewById(R.id.edt_batch);
-        school = (AppCompatAutoCompleteTextView) findViewById(R.id.edt_school);
-        school.setThreshold(1);
-        cgpa = findViewById(R.id.edt_tenth);
-        fee = findViewById(R.id.edt_fee);
-        advance = findViewById(R.id.edt_advance);
+            name = findViewById(R.id.edt_name);
+            dob = findViewById(R.id.edt_dob);
+            fat_name = findViewById(R.id.edt_fatherrname);
+            mot_name = findViewById(R.id.edt_motname);
+            occupation = (AppCompatAutoCompleteTextView) findViewById(R.id.edt_occupation);
+            occupation.setThreshold(1);
+            mother_occupation = (AppCompatAutoCompleteTextView) findViewById(R.id.edt_mother_occupation);
+            mother_occupation.setThreshold(1);
+            address = findViewById(R.id.edt_address);
+            mobile = findViewById(R.id.edt_mobileno);
+            subject = findViewById(R.id.edt_subject);
+            choose_batch = findViewById(R.id.edt_batch);
+            school = (AppCompatAutoCompleteTextView) findViewById(R.id.edt_school);
+            school.setThreshold(1);
+            cgpa = findViewById(R.id.edt_tenth);
+            fee = findViewById(R.id.edt_fee);
+            advance = findViewById(R.id.edt_advance);
 
-        female = findViewById(R.id.radi_female);
-        male = findViewById(R.id.radi_male);
+            female = findViewById(R.id.radi_female);
+            male = findViewById(R.id.radi_male);
 
-        rbtn_10th= findViewById(R.id.rbtn_10th);
-        rbtn_11th = findViewById(R.id.rbtn_11th);
-        rbtn_12th = findViewById(R.id.rbtn_12th);
+            rbtn_10th= findViewById(R.id.rbtn_10th);
+            rbtn_11th = findViewById(R.id.rbtn_11th);
+            rbtn_12th = findViewById(R.id.rbtn_12th);
 
-        board_examno    = findViewById(R.id.edt_examno);
+            board_examno    = findViewById(R.id.edt_examno);
 
-        //batch = (Spinner) findViewById(R.id.spn_batch);
+            //batch = (Spinner) findViewById(R.id.spn_batch);
 
-        cancel = findViewById(R.id.btn_cancel);
-        submit = findViewById(R.id.btn_submit);
+            cancel = findViewById(R.id.btn_cancel);
+            submit = findViewById(R.id.btn_submit);
 
-        joining_date = findViewById(R.id.edt_joiningdate);
+            joining_date = findViewById(R.id.edt_joiningdate);
 
-        final Calendar c1 = Calendar.getInstance();
-        year = c1.get(Calendar.YEAR);
-        month = c1.get(Calendar.MONTH);
-        day = c1.get(Calendar.DAY_OF_MONTH);
-        SimpleDateFormat dateformat1 = new SimpleDateFormat("dd-MM-yyyy");
-        String str1 = dateformat1.format(c1.getTime());
-        joining_date.setText(str1);
-
-
-        //Loading batch list
-        String str = "";
-        Calendar c = Calendar.getInstance();
-        SimpleDateFormat dateformat = new SimpleDateFormat("yyyy");
-        str = dateformat.format(c.getTime());
-
-        //Loading autocomplete school name
-        Baseconfig.LoadValues(school, Enroll_Students.this, "select distinct School_Name as dvalue from Mstr_School where IsActive='1' order by School_Name;");
+            final Calendar c1 = Calendar.getInstance();
+            year = c1.get(Calendar.YEAR);
+            month = c1.get(Calendar.MONTH);
+            day = c1.get(Calendar.DAY_OF_MONTH);
+            SimpleDateFormat dateformat1 = new SimpleDateFormat("dd-MM-yyyy");
+            String str1 = dateformat1.format(c1.getTime());
+            joining_date.setText(str1);
 
 
-        //Loading autocomplete occupation name
-        Baseconfig.LoadValues(occupation, Enroll_Students.this, "select distinct Occupation_Name as dvalue from Mstr_Occupation where IsActive='1' order by Occupation_Name;");
-        Baseconfig.LoadValues(mother_occupation, Enroll_Students.this, "select distinct Occupation_Name as dvalue from Mstr_Occupation where IsActive='1' order by Occupation_Name;");
+            //Loading batch list
+            String str = "";
+            Calendar c = Calendar.getInstance();
+            SimpleDateFormat dateformat = new SimpleDateFormat("yyyy");
+            str = dateformat.format(c.getTime());
+
+            //Loading autocomplete school name
+            Baseconfig.LoadValues(school, Enroll_Students.this, "select distinct School_Name as dvalue from Mstr_School where IsActive='1' order by School_Name;");
+
+
+            //Loading autocomplete occupation name
+            Baseconfig.LoadValues(occupation, Enroll_Students.this, "select distinct Occupation_Name as dvalue from Mstr_Occupation where IsActive='1' order by Occupation_Name;");
+            Baseconfig.LoadValues(mother_occupation, Enroll_Students.this, "select distinct Occupation_Name as dvalue from Mstr_Occupation where IsActive='1' order by Occupation_Name;");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
 
     }
@@ -469,6 +462,15 @@ public class Enroll_Students extends AppCompatActivity implements Imageutils.Ima
             @Override
             public void onClick(View view) {
 
+                int getStudentsCount = Integer.parseInt(Baseconfig.LoadValue("select StudentCount as dstatus from Bind_InstituteInfo where IsPaid=1 and UID='"+Baseconfig.App_UID+"'"));
+                int getCurrentPlanCount = Integer.parseInt(Baseconfig.LoadValue("select count(Id) as dstatus from Bind_EnrollStudents"));
+                if(getCurrentPlanCount==getStudentsCount)
+                {
+                    Baseconfig.SweetDialgos(4, Enroll_Students.this, "Information", "As per plan you have reached maximum student enrollments..\nKindly renew your plan.." + strError.toString(), "OK");
+
+                    return ;
+                }
+
                 if (checkValidation()) {
 
                     SaveLocal();
@@ -477,6 +479,7 @@ public class Enroll_Students extends AppCompatActivity implements Imageutils.Ima
 
                     Baseconfig.SweetDialgos(4, Enroll_Students.this, "Information", " Please fill all mandatory fields marked with (*)\n" + strError.toString(), "OK");
                 }
+
             }
         });
 
@@ -784,108 +787,110 @@ public class Enroll_Students extends AppCompatActivity implements Imageutils.Ima
 
     public void SaveLocal() {
 
-        String Str_PhotoPath = "N/A", Str_Name = "N/A", Str_Gender = "N/A", Str_DOB = "N/A", Str_FatherName = "N/A", Str_FatherJob = "N/A", Str_MotherName = "N/A", Str_Address = "N/A", Str_MobileNo = "N/A", Str_Subject = "N/A", Str_BatchInfo = "N/A",
-                Str_NameofSchool = "N/A", Str_CPGA = "N/A", Str_CoachingFee = "N/A", Str_FeeAdvance = "N/A", Str_SID = "";
-
-        String Str_Standard = "", Str_JoiningDate = "";
-
-        String BoardExamNO="";
-
-        if (Baseconfig.StudentImgPath.toString().length() == 0) {
-            Baseconfig.StudentImgPath = Environment.getExternalStorageDirectory() + "/vcc/male_avatar.jpg";
-        }
-
-        Str_PhotoPath = Baseconfig.StudentImgPath;
-
-        Str_Name = name.getText().toString();//*
-        if (male.isChecked() == true) {
-            Str_Gender = "Male";
-        } else {
-            Str_Gender = "Female";
-        }
-
-        if(rbtn_10th.isChecked()==true)
-        {
-            Str_Standard="10th";
-        }
-        else if (rbtn_11th.isChecked() == true) {
-            Str_Standard = "11th";
-        } else if(rbtn_12th.isChecked()==true){
-            Str_Standard = "12th";
-        }
-
-        Str_JoiningDate=joining_date.getText().toString();
-        Str_DOB = dob.getText().toString();
-        Str_FatherName = fat_name.getText().toString();
-        Str_FatherJob = occupation.getText().toString();
-        Str_MotherName = mot_name.getText().toString();
-        Str_Address = address.getText().toString();
-        Str_MobileNo = mobile.getText().toString();//*
-        Str_Subject = subject.getText().toString();//*
-        Str_BatchInfo = choose_batch.getText().toString();//*
-        Str_NameofSchool = school.getText().toString();//*
-        Str_CPGA = cgpa.getText().toString();//*
-        Str_CoachingFee = fee.getText().toString();//*
-        Str_FeeAdvance = advance.getText().toString();
-        String Str_Mother_Occupation = mother_occupation.getText().toString();
-        String Str_BoardExam = board_examno.getText().toString();
 
         try {
-            //SIDCPM007510
-            //Toast.makeText(this, "Selected subject: "+ Str_Subject, Toast.LENGTH_LONG).show();
-            barcode_data = "SID" + LoadSubject(Str_Subject) + UUID.randomUUID().toString().split("-")[1].toUpperCase();
+            String Str_PhotoPath = "N/A", Str_Name = "N/A", Str_Gender = "N/A", Str_DOB = "N/A", Str_FatherName = "N/A", Str_FatherJob = "N/A", Str_MotherName = "N/A", Str_Address = "N/A", Str_MobileNo = "N/A", Str_Subject = "N/A", Str_BatchInfo = "N/A",
+                    Str_NameofSchool = "N/A", Str_CPGA = "N/A", Str_CoachingFee = "N/A", Str_FeeAdvance = "N/A", Str_SID = "";
 
-            bitmap = encodeAsBitmap(barcode_data, BarcodeFormat.CODE_128, 500, 150);
-            //iv.setImageBitmap(bitmap);
-            SaveImage(bitmap);
+            String Str_Standard = "", Str_JoiningDate = "";
 
-        } catch (WriterException e) {
-            e.printStackTrace();
-        }
+            String BoardExamNO="";
 
-        Str_SID = barcode_data.toString();
+            if (Baseconfig.StudentImgPath.toString().length() == 0) {
+                Baseconfig.StudentImgPath = Environment.getExternalStorageDirectory() + "/vcc/male_avatar.jpg";
+            }
 
-        //String[] Selected_Subjects=Str_Subject.toString().split(",");
-        //String[] Selected_Batch=Str_BatchInfo.toString().split(",");
+            Str_PhotoPath = Baseconfig.StudentImgPath;
 
-        SQLiteDatabase db = Baseconfig.GetDb();
-        ContentValues values = new ContentValues();
-        values.put("Name", Str_Name);
-        values.put("Gender", Str_Gender);
-        values.put("DOB", Str_DOB);
-        values.put("Father_Name", Str_FatherName);
-        values.put("Father_Occupation", Str_FatherJob);
-        values.put("Mother_Name", Str_MotherName);
-        values.put("Mother_Occupation", Str_Mother_Occupation);
-        values.put("Address", Str_Address);
-        values.put("Mobile_Number", Str_MobileNo);
-        values.put("Subject", Str_Subject);
-        values.put("Batch_Info", Str_BatchInfo);
-        //values.put("Batch_ID", Baseconfig.LoadValue("select Id as dstatus from Mstr_Batch where Batch_Name='"+Str_BatchInfo+"' and IsActive='True'"));
-        values.put("School_Name", Str_NameofSchool);
-        values.put("CGPA", Str_CPGA);
-        values.put("Coaching_Fee", Str_CoachingFee);
-        values.put("Fee_Advance", Str_FeeAdvance);
-        values.put("IsActive", "1");
-        values.put("IsUpdate", "0");
-        values.put("Standard", Str_Standard);
-        values.put("Joining_Date", Str_JoiningDate);
-        values.put("ActDate", Baseconfig.GetDate());
-        values.put("Photo", Str_PhotoPath);
-        values.put("SID", Str_SID);
-        values.put("BoardExam_No", Str_BoardExam);
-        values.put("IsFullFee_Paid", "");
-        values.put("IsSMS_Sent", "0");
-        db.insert("Bind_EnrollStudents", null, values);
+            Str_Name = name.getText().toString();//*
+            if (male.isChecked() == true) {
+                Str_Gender = "Male";
+            } else {
+                Str_Gender = "Female";
+            }
 
+            if(rbtn_10th.isChecked()==true)
+            {
+                Str_Standard="10th";
+            }
+            else if (rbtn_11th.isChecked() == true) {
+                Str_Standard = "11th";
+            } else if(rbtn_12th.isChecked()==true){
+                Str_Standard = "12th";
+            }
 
-        if (Str_FeeAdvance != null && Str_FeeAdvance.length() > 0) {
-            values = new ContentValues();
+            Str_JoiningDate=joining_date.getText().toString();
+            Str_DOB = dob.getText().toString();
+            Str_FatherName = fat_name.getText().toString();
+            Str_FatherJob = occupation.getText().toString();
+            Str_MotherName = mot_name.getText().toString();
+            Str_Address = address.getText().toString();
+            Str_MobileNo = mobile.getText().toString();//*
+            Str_Subject = subject.getText().toString();//*
+            Str_BatchInfo = choose_batch.getText().toString();//*
+            Str_NameofSchool = school.getText().toString();//*
+            Str_CPGA = cgpa.getText().toString();//*
+            Str_CoachingFee = fee.getText().toString();//*
+            Str_FeeAdvance = advance.getText().toString();
+            String Str_Mother_Occupation = mother_occupation.getText().toString();
+            String Str_BoardExam = board_examno.getText().toString();
+
+            try {
+                //SIDCPM007510
+                //Toast.makeText(this, "Selected subject: "+ Str_Subject, Toast.LENGTH_LONG).show();
+                barcode_data = "SID" + LoadSubject(Str_Subject) + UUID.randomUUID().toString().split("-")[1].toUpperCase();
+
+                bitmap = encodeAsBitmap(barcode_data, BarcodeFormat.CODE_128, 500, 150);
+                //iv.setImageBitmap(bitmap);
+                SaveImage(bitmap);
+
+            } catch (WriterException e) {
+                e.printStackTrace();
+            }
+
+            Str_SID = barcode_data.toString();
+
+            //String[] Selected_Subjects=Str_Subject.toString().split(",");
+            //String[] Selected_Batch=Str_BatchInfo.toString().split(",");
+
+            SQLiteDatabase db = Baseconfig.GetDb();
+            ContentValues values = new ContentValues();
+            values.put("Name", Str_Name);
+            values.put("Gender", Str_Gender);
+            values.put("DOB", Str_DOB);
+            values.put("Father_Name", Str_FatherName);
+            values.put("Father_Occupation", Str_FatherJob);
+            values.put("Mother_Name", Str_MotherName);
+            values.put("Mother_Occupation", Str_Mother_Occupation);
+            values.put("Address", Str_Address);
+            values.put("Mobile_Number", Str_MobileNo);
+            values.put("Subject", Str_Subject);
+            values.put("Batch_Info", Str_BatchInfo);
+            //values.put("Batch_ID", Baseconfig.LoadValue("select Id as dstatus from Mstr_Batch where Batch_Name='"+Str_BatchInfo+"' and IsActive='True'"));
+            values.put("School_Name", Str_NameofSchool);
+            values.put("CGPA", Str_CPGA);
+            values.put("Coaching_Fee", Str_CoachingFee);
+            values.put("Fee_Advance", Str_FeeAdvance);
+            values.put("IsActive", "1");
+            values.put("IsUpdate", "0");
+            values.put("Standard", Str_Standard);
+            values.put("Joining_Date", Str_JoiningDate);
+            values.put("ActDate", Baseconfig.GetDate());
+            values.put("Photo", Str_PhotoPath);
             values.put("SID", Str_SID);
-            values.put("Paid_Fee", Str_FeeAdvance);
-            values.put("Paid_Date", Baseconfig.GetDate());
-            db.insert("Bind_FeeEntry", null, values);
-        }
+            values.put("BoardExam_No", Str_BoardExam);
+            values.put("IsFullFee_Paid", "");
+            values.put("IsSMS_Sent", "0");
+            db.insert("Bind_EnrollStudents", null, values);
+
+
+            if (Str_FeeAdvance != null && Str_FeeAdvance.length() > 0) {
+                values = new ContentValues();
+                values.put("SID", Str_SID);
+                values.put("Paid_Fee", Str_FeeAdvance);
+                values.put("Paid_Date", Baseconfig.GetDate());
+                db.insert("Bind_FeeEntry", null, values);
+            }
 
 
 /*
@@ -898,53 +903,56 @@ public class Enroll_Students extends AppCompatActivity implements Imageutils.Ima
         db.insert("Temp_Attendance",null,values);
         */
 
-        //Insert Occupation Mstr if not available na - Mother occupation
-        boolean b;
-        if (Str_Mother_Occupation.length() > 0) {
-            b = Baseconfig.LoadReportsBooleanStatus("select Id as dstatus1 from Mstr_Occupation where Occupation_Name='" + Str_Mother_Occupation.toString() + "' and IsActive='1'");
-            if (!b) {
-                values = new ContentValues();
-                values.put("Occupation_Name", Str_Mother_Occupation);
-                values.put("IsActive", "1");
-                values.put("IsUpdate", "0");
-                values.put("ActDate", Baseconfig.GetDate());
-                db.insert("Mstr_Occupation", null, values);
+            //Insert Occupation Mstr if not available na - Mother occupation
+            boolean b;
+            if (Str_Mother_Occupation.length() > 0) {
+                b = Baseconfig.LoadReportsBooleanStatus("select Id as dstatus1 from Mstr_Occupation where Occupation_Name='" + Str_Mother_Occupation.toString() + "' and IsActive='1'");
+                if (!b) {
+                    values = new ContentValues();
+                    values.put("Occupation_Name", Str_Mother_Occupation);
+                    values.put("IsActive", "1");
+                    values.put("IsUpdate", "0");
+                    values.put("ActDate", Baseconfig.GetDate());
+                    db.insert("Mstr_Occupation", null, values);
+                }
             }
-        }
 
-        //Father occupation
-        if (Str_FatherJob.length() > 0) {
-            b = Baseconfig.LoadReportsBooleanStatus("select Id as dstatus1 from Mstr_Occupation where Occupation_Name='" + Str_FatherJob.toString() + "' and IsActive='1'");
-            if (!b) {
-                values = new ContentValues();
-                values.put("Occupation_Name", Str_FatherJob);
-                values.put("IsActive", "1");
-                values.put("IsUpdate", "0");
-                values.put("ActDate", Baseconfig.GetDate());
-                db.insert("Mstr_Occupation", null, values);
+            //Father occupation
+            if (Str_FatherJob.length() > 0) {
+                b = Baseconfig.LoadReportsBooleanStatus("select Id as dstatus1 from Mstr_Occupation where Occupation_Name='" + Str_FatherJob.toString() + "' and IsActive='1'");
+                if (!b) {
+                    values = new ContentValues();
+                    values.put("Occupation_Name", Str_FatherJob);
+                    values.put("IsActive", "1");
+                    values.put("IsUpdate", "0");
+                    values.put("ActDate", Baseconfig.GetDate());
+                    db.insert("Mstr_Occupation", null, values);
+                }
             }
-        }
 
-        //Insert School Mstr  if not available na
-        if (Str_NameofSchool.length() > 0) {
-            b = Baseconfig.LoadReportsBooleanStatus("select Id as dstatus1 from Mstr_School where School_Name='" + Str_NameofSchool.toString() + "' and IsActive='1'");
-            if (!b) {
-                values = new ContentValues();
+            //Insert School Mstr  if not available na
+            if (Str_NameofSchool.length() > 0) {
+                b = Baseconfig.LoadReportsBooleanStatus("select Id as dstatus1 from Mstr_School where School_Name='" + Str_NameofSchool.toString() + "' and IsActive='1'");
+                if (!b) {
+                    values = new ContentValues();
 
-                values.put("School_Name", Str_NameofSchool);
-                values.put("IsActive", "1");
-                values.put("IsUpdate", "0");
-                values.put("ActDate", Baseconfig.GetDate());
-                db.insert("Mstr_School", null, values);
+                    values.put("School_Name", Str_NameofSchool);
+                    values.put("IsActive", "1");
+                    values.put("IsUpdate", "0");
+                    values.put("ActDate", Baseconfig.GetDate());
+                    db.insert("Mstr_School", null, values);
+                }
             }
+
+
+            db.close();
+
+            Log.e("Inserted Values: ", String.valueOf(values));
+
+            ShowSuccessDialog();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
-
-        db.close();
-
-        Log.e("Inserted Values: ", String.valueOf(values));
-
-        ShowSuccessDialog();
 
 
     }

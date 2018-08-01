@@ -73,6 +73,11 @@ import vcc.coremodule.R;
 public class Baseconfig {
 
 
+    public static String FIREBASE_INSTITUTE_USERS="Institute_Users";
+    public static String FIREBASE_PLANS="Plans";
+    public static String FIREBASE_PURCHASES="Purchases";
+
+
     public static String CHANNEL_ID = "my_channel_01";
 
     public static String DATABASE_FILE_PATH = Environment.getExternalStorageDirectory().getPath() + "/vcc";
@@ -1022,6 +1027,8 @@ public class Baseconfig {
     public static String App_ActDate="";
     public static String App_EmailPassword="";
     public static String App_SMSOption="";
+    public static String App_UID="";
+
 
     public static void GetOwnerInfo() {
         try {
@@ -1041,6 +1048,7 @@ public class Baseconfig {
                         App_Email=c.getString(c.getColumnIndex("Email"));
                         App_EmailPassword=c.getString(c.getColumnIndex("EmailPassword"));
                         App_SMSOption=c.getString(c.getColumnIndex("SMSOption"));
+                        App_UID=c.getString(c.getColumnIndex("UID"));
 
                     } while (c.moveToNext());
                 }
