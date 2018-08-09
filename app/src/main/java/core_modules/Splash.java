@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.widget.ProgressBar;
@@ -16,8 +17,14 @@ import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog;
 
 import java.io.File;
@@ -182,9 +189,10 @@ public class Splash extends RuntimePermissionsActivity implements ActivityCompat
 
                             if (mFirebaseUser != null && Registration) { //both case passed {login, registration}
 
-                                finish();
+                                 finish();
                                 Intent intent = new Intent(Splash.this, Task_Navigation.class);
                                 startActivity(intent);
+
 
                             } else if (mFirebaseUser != null) //
                             {
@@ -262,19 +270,7 @@ public class Splash extends RuntimePermissionsActivity implements ActivityCompat
             IdpResponse response = IdpResponse.fromResultIntent(data);
             if (resultCode == RESULT_OK) {
 
-                //insert / check
-                if(mFirebaseUser.isEmailVerified())
-                {
-                    // Successfully signed in
-                    Toast.makeText(Splash.this, "Signing In Success", Toast.LENGTH_LONG).show();
-                    startActivity(new Intent(Splash.this, Institute_Registration.class));
-                    finish();
-
-                    Toast.makeText(this, "Email verified..", Toast.LENGTH_SHORT).show();
-                }else
-                {
-                    Toast.makeText(this, "Email not verified..", Toast.LENGTH_SHORT).show();
-                }
+                GetInstitueInfoFromDB();
 
             } else {
                 // Sign in failed, check response for error code
@@ -294,6 +290,44 @@ public class Splash extends RuntimePermissionsActivity implements ActivityCompat
 
             }
         }
+    }
+
+    private void GetInstitueInfoFromDB() {
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        Query docRef = db.collection(Baseconfig.FIREBASE_INSTITUTE_USERS).whereEqualTo("UID", mFirebaseAuth.getCurrentUser().getUid());
+        docRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    List<DocumentSnapshot> document = task.getResult().getDocuments();
+                    if (document != null && document.size()>0) {
+                        Log.d("", "DocumentSnapshot data: " + task.getResult().getDocuments().size());
+
+                        //Data insert
+                        Toast.makeText(Splash.this, "Signing In Success", Toast.LENGTH_LONG).show();
+                        startActivity(new Intent(Splash.this, Task_Navigation.class));
+                        finish();
+
+                    } else {
+                        Log.d("", "No such document");
+
+                        Toast.makeText(Splash.this, "Signing In Success", Toast.LENGTH_LONG).show();
+                        startActivity(new Intent(Splash.this, Institute_Registration.class));
+                        finish();
+                    }
+
+
+                } else {
+
+
+                    Log.d("", "get failed with ", task.getException());
+                }
+            }
+        });
+
+
     }
 
     public void isStoragePermissionGranted() {

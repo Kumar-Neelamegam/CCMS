@@ -342,7 +342,7 @@ public class Institute_Registration extends AppCompatActivity implements Imageut
 
             FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-            db.collection(Baseconfig.FIREBASE_INSTITUTE_USERS).document(mFirebaseUser.getUid()).set(Hashvalue)
+            db.collection(Baseconfig.FIREBASE_INSTITUTE_USERS).document().set(Hashvalue)
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
@@ -357,6 +357,9 @@ public class Institute_Registration extends AppCompatActivity implements Imageut
                             Log.d("TAG", e.toString());
                         }
                     });
+
+
+
         } catch (Exception e) {
             e.printStackTrace();
         }

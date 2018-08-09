@@ -128,10 +128,13 @@ public class Plans_Adapter extends RecyclerView.Adapter<Plans_Adapter.PriceViewH
                 {
                     e.printStackTrace();
                 }
+
+
+                UpdateResultStatus("5", "1");
+
             }
         });
 
-     //   UpdateToFirebase("1","350");
 
 
     }
@@ -193,12 +196,44 @@ public class Plans_Adapter extends RecyclerView.Adapter<Plans_Adapter.PriceViewH
 
             initListener(StudentCount, PayId);
             instamojoPay.start(activity, pay, listener);
-            UpdateResultStatus(StudentCount, PayId);
+
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
+
+
+    private void initListener(String StudentCount, String PayId) {
+
+        try {
+
+            listener = new InstapayListener() {
+                @Override
+                public void onSuccess(String response) {
+
+                    Toast.makeText(ctx, response, Toast.LENGTH_LONG).show();
+
+                    UpdateResultStatus(StudentCount, PayId);
+                    PushtoFireBasePaymentTransaction(StudentCount, PayId, Baseconfig.App_UID, Baseconfig.GetDate());
+                }
+
+                @Override
+                public void onFailure(int code, String reason) {
+
+                    Toast.makeText(ctx, "Failed: " + reason, Toast.LENGTH_LONG).show();
+                    SQLiteDatabase db = Baseconfig.GetDb();
+                    db.execSQL("Update Bind_InstituteInfo set IsPaid=0");//if ispaid==1
+                    db.close();
+                }
+            };
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
     private void UpdateResultStatus(String StudentCount, String PayId) {
         try {
@@ -217,37 +252,6 @@ public class Plans_Adapter extends RecyclerView.Adapter<Plans_Adapter.PriceViewH
             e.printStackTrace();
         }
     }
-
-
-    private void initListener(String StudentCount, String PayId) {
-
-        try {
-
-            listener = new InstapayListener() {
-                @Override
-                public void onSuccess(String response) {
-
-                    Toast.makeText(ctx, response, Toast.LENGTH_LONG).show();
-
-                    UpdateResultStatus(StudentCount, PayId);
-
-                }
-
-                @Override
-                public void onFailure(int code, String reason) {
-
-                    Toast.makeText(ctx, "Failed: " + reason, Toast.LENGTH_LONG).show();
-                    SQLiteDatabase db = Baseconfig.GetDb();
-                    db.execSQL("Update Bind_InstituteInfo set IsPaid=0");//if ispaid==1
-                    db.close();
-                }
-            };
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
 
 
     private void UpdateToFirebase(String PAYID, String STUDENTCOUNT) {
@@ -274,6 +278,46 @@ public class Plans_Adapter extends RecyclerView.Adapter<Plans_Adapter.PriceViewH
                         @Override
                         public void onFailure(@NonNull Exception e) {
 
+                            Log.d("TAG", e.toString());
+                        }
+                    });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+
+
+
+
+    }
+
+    private void PushtoFireBasePaymentTransaction(String StudentCount, String PAYID, String UID, String PurchaseDate) {
+
+        try {
+
+
+            Map<String, Object> newContact = new HashMap<>();
+            newContact.put("UID", UID);
+            newContact.put("PayId", PAYID);
+            newContact.put("PurchaseDate", PurchaseDate);
+            newContact.put("StudentCount", StudentCount);
+
+
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+            db.collection(Baseconfig.FIREBASE_PURCHASES).document(Baseconfig.App_UID).set(newContact)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            // Toast.makeText(Institute_Registration.this, "User Registered", Toast.LENGTH_SHORT).show();
+
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            // Toast.makeText(Institute_Registration.this, "ERROR" + e.toString(), Toast.LENGTH_SHORT).show();
                             Log.d("TAG", e.toString());
                         }
                     });
