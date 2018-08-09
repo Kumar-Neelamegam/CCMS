@@ -26,6 +26,7 @@ import android.widget.DatePicker;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RadioButton;
+import android.widget.Toast;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
@@ -45,9 +46,11 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
+import core_modules.PaymentPage;
 import core_modules.Task_Navigation;
 import utilities.Baseconfig;
 import utilities.Imageutils;
+import utilities.LocalSharedPreference;
 import vcc.coremodule.R;
 
 import static utilities.Baseconfig.GetDb;
@@ -60,6 +63,9 @@ public class Enroll_Students extends AppCompatActivity implements Imageutils.Ima
      * Muthukumar N & Vidhya K
      */
     //*********************************************************************************************
+    LocalSharedPreference sharedPreference;
+
+
     private Toolbar toolbar;
     ImageView Back, Exit;
 
@@ -68,8 +74,8 @@ public class Enroll_Students extends AppCompatActivity implements Imageutils.Ima
     ImageView photo;
     ImageButton camera;
     AutoCompleteTextView school, occupation, mother_occupation;
-    AppCompatEditText name, dob, fat_name, mot_name, address, mobile, subject, choose_batch, cgpa, fee, advance, joining_date,board_examno;
-    RadioButton female, male, rbtn_10th,rbtn_11th, rbtn_12th;
+    AppCompatEditText name, dob, fat_name, mot_name, address, mobile, subject, choose_batch, cgpa, fee, advance, joining_date, board_examno;
+    RadioButton female, male, rbtn_10th, rbtn_11th, rbtn_12th;
     //Spinner batch;
     Button cancel, submit;
 
@@ -132,11 +138,11 @@ public class Enroll_Students extends AppCompatActivity implements Imageutils.Ima
             female = findViewById(R.id.radi_female);
             male = findViewById(R.id.radi_male);
 
-            rbtn_10th= findViewById(R.id.rbtn_10th);
+            rbtn_10th = findViewById(R.id.rbtn_10th);
             rbtn_11th = findViewById(R.id.rbtn_11th);
             rbtn_12th = findViewById(R.id.rbtn_12th);
 
-            board_examno    = findViewById(R.id.edt_examno);
+            board_examno = findViewById(R.id.edt_examno);
 
             //batch = (Spinner) findViewById(R.id.spn_batch);
 
@@ -251,18 +257,15 @@ public class Enroll_Students extends AppCompatActivity implements Imageutils.Ima
 
                 subject.setText(stringBuilder.toString());
 
-                int TotalFee=0;
+                int TotalFee = 0;
 
-                if(stringBuilder.toString().toString().length()>0)
-                {
-                    String[] SubjectNames=stringBuilder.toString().split(",");
-                    for(int i=0;i<SubjectNames.length;i++)
-                    {
+                if (stringBuilder.toString().toString().length() > 0) {
+                    String[] SubjectNames = stringBuilder.toString().split(",");
+                    for (int i = 0; i < SubjectNames.length; i++) {
 
-                        String fee=Baseconfig.LoadValue("select IFNULL(Fee,'0') as dstatus from Mstr_Fee where Subject_Name='"+SubjectNames[i].toString()+"'");
-                        if(fee==null || fee.length()==0)
-                        {
-                          fee="0";
+                        String fee = Baseconfig.LoadValue("select IFNULL(Fee,'0') as dstatus from Mstr_Fee where Subject_Name='" + SubjectNames[i].toString() + "'");
+                        if (fee == null || fee.length() == 0) {
+                            fee = "0";
                         }
 
                         TotalFee += Integer.parseInt(fee);
@@ -462,22 +465,50 @@ public class Enroll_Students extends AppCompatActivity implements Imageutils.Ima
             @Override
             public void onClick(View view) {
 
-                int getStudentsCount = Integer.parseInt(Baseconfig.LoadValue("select StudentCount as dstatus from Bind_InstituteInfo where IsPaid=1 and UID='"+Baseconfig.App_UID+"'"));
-                int getCurrentPlanCount = Integer.parseInt(Baseconfig.LoadValue("select count(Id) as dstatus from Bind_EnrollStudents"));
-                if(getCurrentPlanCount==getStudentsCount)
-                {
-                    Baseconfig.SweetDialgos(4, Enroll_Students.this, "Information", "As per plan you have reached maximum student enrollments..\nKindly renew your plan.." + strError.toString(), "OK");
+                int getCurrentPlanCount = Integer.parseInt(Baseconfig.LoadValueInt("select StudentCount as dstatus from Bind_InstituteInfo where IsPaid=1 and UID='" + Baseconfig.App_UID + "'"));
+                int getStudentsCount = Integer.parseInt(Baseconfig.LoadValueInt("select count(Id) as dstatus from Bind_EnrollStudents"));
+                if (getCurrentPlanCount != 0) {
 
-                    return ;
-                }
+                    if (getCurrentPlanCount == getStudentsCount) {
 
-                if (checkValidation()) {
+                       // Baseconfig.SweetDialgos(4, Enroll_Students.this, "Information", "As per plan you have reached maximum student enrollments..\nKindly renew your plan.."  , "OK");
 
-                    SaveLocal();
+                        new SweetAlertDialog(Enroll_Students.this, SweetAlertDialog.WARNING_TYPE)
+                                .setTitleText("Information")
+                                .setContentText("As per plan you have reached maximum student enrollments..\nKindly renew your plan..")
+                                .setConfirmText("OK")
+                                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                    @Override
+                                    public void onClick(SweetAlertDialog sweetAlertDialog) {
 
+                                        Intent payment=new Intent(Enroll_Students.this, PaymentPage.class);
+                                        Enroll_Students.this.startActivity(payment);
+                                        Baseconfig.ExpiryStatus = true;
+                                        sharedPreference.setBoolean(Baseconfig.Preference_ExpiryStatus, true);//Full data
+
+                                    }
+                                })
+                                .show();
+
+
+                        return;
+                    }
+
+                    if (checkValidation()) {
+
+                        SaveLocal();
+
+                    } else {
+
+                        Baseconfig.SweetDialgos(4, Enroll_Students.this, "Information", " Please fill all mandatory fields marked with (*)\n" + strError.toString(), "OK");
+                    }
                 } else {
 
-                    Baseconfig.SweetDialgos(4, Enroll_Students.this, "Information", " Please fill all mandatory fields marked with (*)\n" + strError.toString(), "OK");
+                    //Baseconfig.SweetDialgos(4, Enroll_Students.this, "Information", "Purchase any plan to continue..", "OK");
+                    Toast.makeText(Enroll_Students.this, "Purchase any plan to continue..", Toast.LENGTH_SHORT).show();
+                    Intent payment=new Intent(Enroll_Students.this, PaymentPage.class);
+                    Enroll_Students.this.startActivity(payment);
+
                 }
 
             }
@@ -641,7 +672,7 @@ public class Enroll_Students extends AppCompatActivity implements Imageutils.Ima
 
     };
     //**********************************************************************************************
-    StringBuilder strError;
+    StringBuilder strError=new StringBuilder();
 
     public boolean checkValidation() {
         boolean ret = true;
@@ -683,32 +714,28 @@ public class Enroll_Students extends AppCompatActivity implements Imageutils.Ima
             ret = false;
         }*/
 
-        String val1=fee.getText().toString();
-        String val2=advance.getText().toString();
+        String val1 = fee.getText().toString();
+        String val2 = advance.getText().toString();
 
-        if(fee.getText().length()==0)
-        {
-            val1="0";
+        if (fee.getText().length() == 0) {
+            val1 = "0";
         }
 
 
-        if(advance.getText().length()==0)
-        {
-            val2="0";
+        if (advance.getText().length() == 0) {
+            val2 = "0";
         }
 
 
         //8500<8500
-        if(Integer.parseInt(val1)<Integer.parseInt(val2))
-        {
+        if (Integer.parseInt(val1) < Integer.parseInt(val2)) {
             strError.append("Advance should not be greater than Fee\n");
-            ret=false;
+            ret = false;
         }
 
-        if(Integer.parseInt(val1)==0)
-        {
+        if (Integer.parseInt(val1) == 0) {
             strError.append("Fee should be greater than 0\n");
-            ret=false;
+            ret = false;
         }
 
         if (fee.getText().length() == 0) {
@@ -728,7 +755,7 @@ public class Enroll_Students extends AppCompatActivity implements Imageutils.Ima
         }
 
 
-        if (rbtn_10th.isChecked()==false && rbtn_11th.isChecked() == false && rbtn_12th.isChecked() == false) {
+        if (rbtn_10th.isChecked() == false && rbtn_11th.isChecked() == false && rbtn_12th.isChecked() == false) {
             strError.append("Standard*\n");
             ret = false;
         }
@@ -794,7 +821,7 @@ public class Enroll_Students extends AppCompatActivity implements Imageutils.Ima
 
             String Str_Standard = "", Str_JoiningDate = "";
 
-            String BoardExamNO="";
+            String BoardExamNO = "";
 
             if (Baseconfig.StudentImgPath.toString().length() == 0) {
                 Baseconfig.StudentImgPath = Environment.getExternalStorageDirectory() + "/vcc/male_avatar.jpg";
@@ -809,17 +836,15 @@ public class Enroll_Students extends AppCompatActivity implements Imageutils.Ima
                 Str_Gender = "Female";
             }
 
-            if(rbtn_10th.isChecked()==true)
-            {
-                Str_Standard="10th";
-            }
-            else if (rbtn_11th.isChecked() == true) {
+            if (rbtn_10th.isChecked() == true) {
+                Str_Standard = "10th";
+            } else if (rbtn_11th.isChecked() == true) {
                 Str_Standard = "11th";
-            } else if(rbtn_12th.isChecked()==true){
+            } else if (rbtn_12th.isChecked() == true) {
                 Str_Standard = "12th";
             }
 
-            Str_JoiningDate=joining_date.getText().toString();
+            Str_JoiningDate = joining_date.getText().toString();
             Str_DOB = dob.getText().toString();
             Str_FatherName = fat_name.getText().toString();
             Str_FatherJob = occupation.getText().toString();
@@ -838,7 +863,7 @@ public class Enroll_Students extends AppCompatActivity implements Imageutils.Ima
             try {
                 //SIDCPM007510
                 //Toast.makeText(this, "Selected subject: "+ Str_Subject, Toast.LENGTH_LONG).show();
-                barcode_data = "SID" + LoadSubject(Str_Subject) + UUID.randomUUID().toString().split("-")[1].toUpperCase();
+                barcode_data = "SID" + LoadSubject(Str_Subject).toUpperCase() + UUID.randomUUID().toString().split("-")[1].toUpperCase();
 
                 bitmap = encodeAsBitmap(barcode_data, BarcodeFormat.CODE_128, 500, 150);
                 //iv.setImageBitmap(bitmap);

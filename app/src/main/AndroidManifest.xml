@@ -208,7 +208,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
-            android:name="adapters.PaymentPage"
+            android:name="core_modules.PaymentPage"
             android:windowSoftInputMode="stateAlwaysHidden"
             android:theme="@style/AppTheme.NoActionBar" />
         //==========================================================================================

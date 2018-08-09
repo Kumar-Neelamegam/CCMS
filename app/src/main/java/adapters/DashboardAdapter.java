@@ -3,17 +3,20 @@ package adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import core_modules.PaymentPage;
 import entry_activities.Enroll_Students;
 import entry_activities.Mark_Entry;
 import entry_activities.Send_SMS;
@@ -41,6 +44,9 @@ public class DashboardAdapter  extends RecyclerView.Adapter<DashboardAdapter.Vie
     String SESSION_DATABASENAME;
     boolean Flag;
 
+    private static final int[] fabbgstr = {
+            R.color.colorPrimary
+    };
     //**********************************************************************************************
 
     public DashboardAdapter(Context context,ArrayList<Getter_Setter.Dashboard_Dataobjects> DataItems,String SESSION_DATABASENAME,boolean Flag) {
@@ -60,6 +66,8 @@ public class DashboardAdapter  extends RecyclerView.Adapter<DashboardAdapter.Vie
 
     @Override
     public void onBindViewHolder(DashboardAdapter.ViewHolder viewHolder, final int i) {
+
+        viewHolder.ImageIcon.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor(context.getResources().getString(fabbgstr[0]))));
 
         viewHolder.Title.setText(DataItems.get(i).getTitle_Name());
         viewHolder.ImageIcon.setImageDrawable(context.getResources().getDrawable(DataItems.get(i).getIcon()));
@@ -112,8 +120,9 @@ public class DashboardAdapter  extends RecyclerView.Adapter<DashboardAdapter.Vie
 
 
             case 3:
-                BlockUser();
-
+                ((Activity)context).finish();
+                Intent Next3=new Intent(context, Students_Register.class);
+                context.startActivity(Next3);
                 break;
 
             case 4:
@@ -221,7 +230,7 @@ public class DashboardAdapter  extends RecyclerView.Adapter<DashboardAdapter.Vie
     //**********************************************************************************************
     public void BlockUser()
     {
-       /* try {
+        /* try {
             new SweetAlertDialog(context)
                     .setTitleText("Information")
                     .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
@@ -241,7 +250,7 @@ public class DashboardAdapter  extends RecyclerView.Adapter<DashboardAdapter.Vie
                     .show();
         } catch (Exception e) {
             e.printStackTrace();
-        }*/
+        } */
 
        // Dialog dialog=Baseconfig.showCustomDialog("","",context);
        // dialog.show();
@@ -261,7 +270,7 @@ public class DashboardAdapter  extends RecyclerView.Adapter<DashboardAdapter.Vie
     public class ViewHolder extends RecyclerView.ViewHolder
     {
         private TextView Title;
-        private ImageView ImageIcon;
+        private FloatingActionButton ImageIcon;
         LinearLayout Layout;
         public ViewHolder(View view) {
             super(view);

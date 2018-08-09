@@ -91,6 +91,9 @@ public class Baseconfig {
     public static String SMS_SID = "";
     private static int InternetFlag;
     Typeface tfavv1;
+    public static boolean ExpiryStatus = false;
+
+    public static String Preference_ExpiryStatus = "ExpiryStatus";
 
     //*********************************************************************************
     public static Dialog showCustomDialog(String title, String message, Activity ctx) {
@@ -460,6 +463,31 @@ public class Baseconfig {
     public static String LoadValue(String Query) {
         try {
             String value = "";
+            SQLiteDatabase db = GetDb();
+            Cursor c = db.rawQuery(Query, null);
+
+            if (c != null) {
+                if (c.moveToFirst()) {
+                    do {
+                        value = c.getString(c.getColumnIndex("dstatus"));
+
+                    } while (c.moveToNext());
+                }
+            }
+
+            c.close();
+            db.close();
+
+            return value;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
+    }
+
+    public static String LoadValueInt(String Query) {
+        try {
+            String value = "0";
             SQLiteDatabase db = GetDb();
             Cursor c = db.rawQuery(Query, null);
 

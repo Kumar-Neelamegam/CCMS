@@ -67,7 +67,7 @@ public class DashboardNew extends Fragment {
             "Send SMS"
     };
 
-    public final int image_drawables[] = {
+/*    public final int image_drawables[] = {
             R.drawable.ic_dashboard_enroll_student,
             R.drawable.ic_dashboard_attendance,
             R.drawable.ic_dashboard_mark_entry,
@@ -77,8 +77,20 @@ public class DashboardNew extends Fragment {
             R.drawable.ic_dashboard_master,
             R.drawable.ic_dashboard_reports,
             R.drawable.ic_dashboard_sms,
-    };
+    };*/
 
+
+    public final int image_drawables[] = {
+            R.drawable.ic_fab_dashboard_1,
+            R.drawable.ic_fab_dashboard_2,
+            R.drawable.ic_fab_dashboard_3,
+            R.drawable.ic_fab_dashboard_4,
+            R.drawable.ic_fab_dashboard_5,
+            R.drawable.ic_fab_dashboard_6,
+            R.drawable.ic_fab_dashboard_7,
+            R.drawable.ic_fab_dashboard_8,
+            R.drawable.ic_fab_dashboard_9
+    };
 
     public final int id[] = {
             0, 1, 2, 3, 4, 5, 6, 7, 8
@@ -88,7 +100,7 @@ public class DashboardNew extends Fragment {
 
     TextView TotalCount, Male, Female, Total_Collection, Txt_BillCount;
 
-    String MAC_ADDRESS="", UUID="";
+    String MAC_ADDRESS = "", UUID = "";
 
     //*********************************************************************************************
 
@@ -110,11 +122,11 @@ public class DashboardNew extends Fragment {
 
             Baseconfig.GetOwnerInfo();
 
-          //  addNewContact();
+            //  addNewContact();
 
-         //   ReadSingleContact();
+            //   ReadSingleContact();
 
-           // addPlans();
+            // addPlans();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -125,11 +137,13 @@ public class DashboardNew extends Fragment {
     }
 
 
-    /** Create cities collection and add sample documents. */
+    /**
+     * Create cities collection and add sample documents.
+     */
     private void addNewContact() {
 
         try {
-            FirebaseFirestore db=FirebaseFirestore.getInstance();
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
 
             Map<String, Object> newContact = new HashMap<>();
             newContact.put("Name", "John");
@@ -159,7 +173,7 @@ public class DashboardNew extends Fragment {
     private void addPlans() {
 
         try {
-            FirebaseFirestore db=FirebaseFirestore.getInstance();
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
 
             Map<String, Object> newContact = new HashMap<>();
 
@@ -235,7 +249,6 @@ public class DashboardNew extends Fragment {
                     });
 
 
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -247,16 +260,13 @@ public class DashboardNew extends Fragment {
     public void SendSMSNotification() {
         try {
             if (Baseconfig.CheckNW(getActivity())) {
-                if(Baseconfig.SMS_Username.length()>0 && Baseconfig.SMS_Password.length()>0)
-                {
-                new SendSMS2().execute();//Paid fee sms
-                Log.e("SendSMSNotification","SendSMSNotification");
-                }
-                else
-                {
+                if (Baseconfig.SMS_Username.length() > 0 && Baseconfig.SMS_Password.length() > 0) {
+                    new SendSMS2().execute();//Paid fee sms
+                    Log.e("SendSMSNotification", "SendSMSNotification");
+                } else {
                     //Baseconfig.SweetDialgos(3, getActivity(), "Information", "Get username and password from SMS INDIA HUB to send sms..\nadd it in profile..", "OK");
 
-                   // Toast.makeText(getActivity(), "Get username and password from SMS INDIA HUB to send sms..\nadd it in profile..", Toast.LENGTH_SHORT).show();
+                    // Toast.makeText(getActivity(), "Get username and password from SMS INDIA HUB to send sms..\nadd it in profile..", Toast.LENGTH_SHORT).show();
                 }
             }
         } catch (Exception e) {
@@ -304,23 +314,21 @@ public class DashboardNew extends Fragment {
 
                         String Name = c.getString(c.getColumnIndex("Name"));
                         String Gender = c.getString(c.getColumnIndex("Gender"));
-                        String Paid_Fee = "."+c.getString(c.getColumnIndex("Paid_Fee"));
-                        String Paid_Date =  c.getString(c.getColumnIndex("Paid_Date"));
+                        String Paid_Fee = "." + c.getString(c.getColumnIndex("Paid_Fee"));
+                        String Paid_Date = c.getString(c.getColumnIndex("Paid_Date"));
 
 
-                        if(Gender.toString().equalsIgnoreCase("Male"))
-                        {
-                            Gender="son";
+                        if (Gender.toString().equalsIgnoreCase("Male")) {
+                            Gender = "son";
 
-                        }else if(Gender.toString().equalsIgnoreCase("Female"))
-                        {
-                            Gender="daughter";
+                        } else if (Gender.toString().equalsIgnoreCase("Female")) {
+                            Gender = "daughter";
                         }
-                        String Balance = "Rs."+GetBalanceFromSID(SID);
+                        String Balance = "Rs." + GetBalanceFromSID(SID);
 
-                        String Message="Dear parent, We have received a payment of Rs "+Paid_Fee+" " +
-                                "from your "+Gender+" "+Name+" as coaching fees on "+Paid_Date+". " +
-                                "Balance payable fee is "+Balance+". Thank you.";
+                        String Message = "Dear parent, We have received a payment of Rs " + Paid_Fee + " " +
+                                "from your " + Gender + " " + Name + " as coaching fees on " + Paid_Date + ". " +
+                                "Balance payable fee is " + Balance + ". Thank you.";
 
                         Log.e("Fee Paid Message: ", Message.toString());
                         Log.e("Fee Paid Message: ", Message.toString());
@@ -335,9 +343,6 @@ public class DashboardNew extends Fragment {
                 }
 
             }
-
-
-
 
 
             /**********************************************************************************************
@@ -357,38 +362,35 @@ public class DashboardNew extends Fragment {
                         String SID = c.getString(c.getColumnIndex("SID"));
                         String Name = c.getString(c.getColumnIndex("Name"));
                         String Gender = c.getString(c.getColumnIndex("Gender"));
-                        String Mobile_Number=c.getString(c.getColumnIndex("Mobile_Number"));
-                        String Subject=c.getString(c.getColumnIndex("Subject")).toString();
-                        String Batch_Info=c.getString(c.getColumnIndex("Batch_Info"));
-                        String Coaching_Fee=c.getString(c.getColumnIndex("Coaching_Fee"));
+                        String Mobile_Number = c.getString(c.getColumnIndex("Mobile_Number"));
+                        String Subject = c.getString(c.getColumnIndex("Subject")).toString();
+                        String Batch_Info = c.getString(c.getColumnIndex("Batch_Info"));
+                        String Coaching_Fee = c.getString(c.getColumnIndex("Coaching_Fee"));
 
-                        String Fee_Advance="0";
+                        String Fee_Advance = "0";
 
-                        Fee_Advance=c.getString(c.getColumnIndex("Fee_Advance"));
+                        Fee_Advance = c.getString(c.getColumnIndex("Fee_Advance"));
 
-                        if(Gender.toString().equalsIgnoreCase("Male"))
-                        {
-                            Gender="son";
+                        if (Gender.toString().equalsIgnoreCase("Male")) {
+                            Gender = "son";
 
-                        }else if(Gender.toString().equalsIgnoreCase("Female"))
-                        {
-                            Gender="daughter";
+                        } else if (Gender.toString().equalsIgnoreCase("Female")) {
+                            Gender = "daughter";
                         }
 
-                        if(Fee_Advance!=null && !Fee_Advance.toString().equalsIgnoreCase("0") && Fee_Advance.length()!=0)
-                        {
-                            Fee_Advance="Rs."+Fee_Advance+".";
-                        }else{
-                            Fee_Advance="Rs.0.";
+                        if (Fee_Advance != null && !Fee_Advance.toString().equalsIgnoreCase("0") && Fee_Advance.length() != 0) {
+                            Fee_Advance = "Rs." + Fee_Advance + ".";
+                        } else {
+                            Fee_Advance = "Rs.0.";
                         }
 
-                        String SubjectInfo=GetSubjectInfo(Batch_Info).toString();
+                        String SubjectInfo = GetSubjectInfo(Batch_Info).toString();
 
-                        String Message="Dear parent, Your "+Gender+" "+Name+" has enrolled with us for " +
-                                ""+Subject+" coaching. Total payable fee for coaching is Rs "+Coaching_Fee+" " +
-                                "and the class timings will be as follows. "+SubjectInfo+" Fee Received - "+Fee_Advance+" Kindly ensure " +
-                                "that your "+Gender+" don't skip classes often and you will get regular " +
-                                "notifications regarding your "+Gender+" Attendance and Test Marks details. " +
+                        String Message = "Dear parent, Your " + Gender + " " + Name + " has enrolled with us for " +
+                                "" + Subject + " coaching. Total payable fee for coaching is Rs " + Coaching_Fee + " " +
+                                "and the class timings will be as follows. " + SubjectInfo + " Fee Received - " + Fee_Advance + " Kindly ensure " +
+                                "that your " + Gender + " don't skip classes often and you will get regular " +
+                                "notifications regarding your " + Gender + " Attendance and Test Marks details. " +
                                 "Thank you. Regards, Vetri Coaching Center, KK Nagar";
 
                         Log.e("Enroll Message: ", Message.toString());
@@ -404,41 +406,36 @@ public class DashboardNew extends Fragment {
             }
 
 
-
             /**********************************************************************************************
              * ********************************************************************************************
              * 3. Sending Student SMS
              */
-            Query="select * from Bind_SMSEntry where IsSMS_Sent='0'";
+            Query = "select * from Bind_SMSEntry where IsSMS_Sent='0'";
 
-            c=db.rawQuery(Query,null);
-            if(c!=null)
-            {
-                if(c.moveToFirst())
-                {
-                    do{
+            c = db.rawQuery(Query, null);
+            if (c != null) {
+                if (c.moveToFirst()) {
+                    do {
 
-                        String ID=c.getString(c.getColumnIndex("Id"));
-                        String SID=c.getString(c.getColumnIndex("SID"));
-                        String MessageContent=c.getString(c.getColumnIndex("SMS"));
+                        String ID = c.getString(c.getColumnIndex("Id"));
+                        String SID = c.getString(c.getColumnIndex("SID"));
+                        String MessageContent = c.getString(c.getColumnIndex("SMS"));
 
-                        String GetMobileNo=Baseconfig.LoadValue("select Mobile_Number as dstatus from Bind_EnrollStudents where SID='"+SID+"'");
+                        String GetMobileNo = Baseconfig.LoadValue("select Mobile_Number as dstatus from Bind_EnrollStudents where SID='" + SID + "'");
                         String MobileNo = GetMobileNo;
 
-                        String Message = "Dear parent, we hereby notify you that "+MessageContent+"";
+                        String Message = "Dear parent, we hereby notify you that " + MessageContent + "";
                         Log.e("Bind_SMSEntry Message: ", Message.toString());
                         Log.e("Bind_SMSEntry Message: ", Message.toString());
 
 
+                        SMSSender(getActivity(), Baseconfig.SMS_Username, Baseconfig.SMS_Password, MobileNo, Message, Baseconfig.SMS_SID, "0", "2", ID, SID, 2);
 
-                        SMSSender(getActivity(), Baseconfig.SMS_Username, Baseconfig.SMS_Password, MobileNo, Message, Baseconfig.SMS_SID, "0", "2",ID,SID,2);
-
-                    }while(c.moveToNext());
+                    } while (c.moveToNext());
 
                 }
 
             }
-
 
 
             c.close();
@@ -459,41 +456,36 @@ public class DashboardNew extends Fragment {
     }
     //**********************************************************************************************
 
-    public StringBuilder GetSubjectInfo(String Batch_Info)
-    {
+    public StringBuilder GetSubjectInfo(String Batch_Info) {
 
-        StringBuilder str=new StringBuilder();
+        StringBuilder str = new StringBuilder();
 
 
-        String[] batches=Batch_Info.toString().split(",");
+        String[] batches = Batch_Info.toString().split(",");
 
-        for(int i=0;i<batches.length;i++)
-        {
-            String str_batch=batches[i].toString();
+        for (int i = 0; i < batches.length; i++) {
+            String str_batch = batches[i].toString();
 
-            String str_total=GetBatchInfo(str_batch);
+            String str_total = GetBatchInfo(str_batch);
 
-            str.append(str_total+"\n");
+            str.append(str_total + "\n");
 
         }
 
         return str;
     }
 
-    public String GetBatchInfo(String str)
-    {
-        String batch_info="";
-        SQLiteDatabase db=Baseconfig.GetDb();
-        Cursor c=db.rawQuery("select Subject_Name||' - Every '|| Coaching_Days ||'. From '|| Class_From ||' till '||  Class_To as info from Mstr_Batch where Batch_Name='"+str+"';",null);
-        if(c!=null)
-        {
-            if(c.moveToFirst())
-            {
-                do{
+    public String GetBatchInfo(String str) {
+        String batch_info = "";
+        SQLiteDatabase db = Baseconfig.GetDb();
+        Cursor c = db.rawQuery("select Subject_Name||' - Every '|| Coaching_Days ||'. From '|| Class_From ||' till '||  Class_To as info from Mstr_Batch where Batch_Name='" + str + "';", null);
+        if (c != null) {
+            if (c.moveToFirst()) {
+                do {
 
-                    batch_info=c.getString(c.getColumnIndex("info"));
+                    batch_info = c.getString(c.getColumnIndex("info"));
 
-                }while(c.moveToNext());
+                } while (c.moveToNext());
             }
         }
         db.close();
@@ -509,16 +501,16 @@ public class DashboardNew extends Fragment {
         String rsp = "";
         String retval = "N/A";
 
-        String SMSOption_Query="select SMSOption as dstatus from Bind_InstituteInfo";
+        String SMSOption_Query = "select SMSOption as dstatus from Bind_InstituteInfo";
         int SMSOption = Integer.parseInt(Baseconfig.LoadValue(SMSOption_Query));
 
-        if(SMSOption==1)//MOBILE SMS
+        if (SMSOption == 1)//MOBILE SMS
         {
 
             Baseconfig.sendSMS(msisdn, msg, ctx);
             rsp = "Success";
 
-        }else//SMS GATEWAY
+        } else//SMS GATEWAY
         {
             try {
                 // Construct The Post Data
@@ -558,11 +550,10 @@ public class DashboardNew extends Fragment {
         }
 
 
-
         Log.e("SMSSender Response: ", rsp);
         if (rsp.toString().contains("Success")) {
 
-            if(InsertId==0)//To update Isms_sent in fee entry
+            if (InsertId == 0)//To update Isms_sent in fee entry
             {
                 SQLiteDatabase db = Baseconfig.GetDb();
                 ContentValues values = new ContentValues();
@@ -571,7 +562,7 @@ public class DashboardNew extends Fragment {
                 db.close();
                 Log.e("Update Bind_FeeEntry SMS Status: ", values + " / " + "SID='" + SID + "'");
 
-            }else if(InsertId==1)//TO update Isms_sent in enrollment entry
+            } else if (InsertId == 1)//TO update Isms_sent in enrollment entry
             {
                 SQLiteDatabase db = Baseconfig.GetDb();
                 ContentValues values = new ContentValues();
@@ -580,13 +571,12 @@ public class DashboardNew extends Fragment {
                 db.close();
                 Log.e("Update Bind_EnrollStudents SMS Status: ", values + " / " + "SID='" + SID + "'");
 
-            }
-            else if(InsertId==2)//TO update Isms_sent in enrollment entry
+            } else if (InsertId == 2)//TO update Isms_sent in enrollment entry
             {
                 SQLiteDatabase db = Baseconfig.GetDb();
                 ContentValues values = new ContentValues();
                 values.put("IsSMS_Sent", 1);
-                db.update("Bind_SMSEntry", values, "SID='" + SID + "' and Id='"+TableId+"'", null);
+                db.update("Bind_SMSEntry", values, "SID='" + SID + "' and Id='" + TableId + "'", null);
                 db.close();
                 Log.e("Update Bind_SMSEntry SMS Status: ", values + " / " + "SID='" + SID + "'");
 
@@ -641,33 +631,30 @@ public class DashboardNew extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
 
 
-        String Query = "select IsPaid as dstatus1 from Bind_InstituteInfo where IsPaid=1 and UID='"+Baseconfig.App_UID+"'";
+        String Query = "select IsPaid as dstatus1 from Bind_InstituteInfo where IsPaid=1 and UID='" + Baseconfig.App_UID + "'";
         boolean getPaidStatus = Baseconfig.LoadReportsBooleanStatus(Query);
-        if(getPaidStatus)//IF PAID NA GO HEAD
+        if (getPaidStatus)//IF PAID NA GO HEAD
         {
-            //get total count and check for expiry
-            int getStudentsCount = Integer.parseInt(Baseconfig.LoadValue("select StudentCount as dstatus from Bind_InstituteInfo where IsPaid=1 and UID='"+Baseconfig.App_UID+"'"));
-            int getCurrentPlanCount = Integer.parseInt(Baseconfig.LoadValue("select count(Id) as dstatus from Bind_EnrollStudents"));
-            if(getCurrentPlanCount==getStudentsCount)
+           /* //get total count and check for expiry
+            int getStudentsCount = Integer.parseInt(Baseconfig.LoadValueInt("select StudentCount as dstatus from Bind_InstituteInfo where IsPaid=1 and UID='" + Baseconfig.App_UID + "'"));
+            int getCurrentPlanCount = Integer.parseInt(Baseconfig.LoadValueInt("select count(Id) as dstatus from Bind_EnrollStudents"));
+            if (getCurrentPlanCount == getStudentsCount) {
+
+            } else//inform user about expiry
             {
 
-            }else//inform user about expiry
-            {
-
-            }
+            }*/
             ArrayList<Getter_Setter.Dashboard_Dataobjects> DataItems = prepareData();
             DashboardAdapter adapter = new DashboardAdapter(getActivity(), DataItems, SESSION_DATABASE, true);
             recyclerView.setAdapter(adapter);
 
-        }
-        else//TRAIL USERS
+        } else//TRAIL USERS
         {
 
             ArrayList<Getter_Setter.Dashboard_Dataobjects> DataItems = prepareData();
-            DashboardAdapter adapter = new DashboardAdapter(getActivity(), DataItems, SESSION_DATABASE,false);
+            DashboardAdapter adapter = new DashboardAdapter(getActivity(), DataItems, SESSION_DATABASE, false);
             recyclerView.setAdapter(adapter);
         }
-
 
 
     }//END

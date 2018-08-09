@@ -3,6 +3,7 @@ package adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.content.IntentFilter;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
@@ -32,6 +33,7 @@ import butterknife.ButterKnife;
 import instamojo.library.InstamojoPay;
 import instamojo.library.InstapayListener;
 import utilities.Baseconfig;
+import utilities.LocalSharedPreference;
 import vcc.coremodule.R;
 
 
@@ -45,6 +47,7 @@ public class Plans_Adapter extends RecyclerView.Adapter<Plans_Adapter.PriceViewH
     String buyername="";
     String GetCustomerName = "";
     Context ctx;
+    LocalSharedPreference sharedPreference;
 
     public Plans_Adapter(List<Plans_Data> pricingList, Context ctx) {
         this.pricingList = pricingList;
@@ -55,7 +58,7 @@ public class Plans_Adapter extends RecyclerView.Adapter<Plans_Adapter.PriceViewH
          purpose = ctx.getString(R.string.app_name);
          buyername = Baseconfig.App_Owner_Name;
         GetCustomerName = Baseconfig.LoadValue("select Institute_Name as dstatus from Bind_InstituteInfo");
-
+        sharedPreference = new LocalSharedPreference(ctx);
     }
 
     @NonNull
@@ -78,26 +81,52 @@ public class Plans_Adapter extends RecyclerView.Adapter<Plans_Adapter.PriceViewH
         holder.totalPrice.setText(pricing.totalprice);
         holder.cardView.setCardBackgroundColor(Color.parseColor(pricing.cardcolor));
 
+        if(!Baseconfig.ExpiryStatus || !sharedPreference.getBoolean(Baseconfig.Preference_ExpiryStatus))
+        {
+            if(position==0)
+            {
+                holder.Payment.setText("Accept");
+
+            }
+
+        }else//true na
+        {
+            if(position==0) {
+                holder.Payment.setVisibility(View.GONE);
+            }
+
+        }
 
         holder.Payment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try{
 
-                    if (Baseconfig.CheckNW(ctx)) {
-
-                        callInstamojoPay(email, phone, String.valueOf(holder.totalPrice.getText()), purpose, buyername, pricing.validupto, String.valueOf(pricing.payid));
-                    }
-                    else
+                    if(position==0 && holder.Payment.getText().equals("Accept"))//Trail user
                     {
+                        UpdateResultStatus("5","0");
 
-                        Baseconfig.SweetDialgos(4, ctx, "Information", " No internet connection found..try later ", "OK");
+                        return;
+                    }else
+                    {
+                        if (Baseconfig.CheckNW(ctx)) {
+
+                            callInstamojoPay(email, phone, String.valueOf(holder.totalPrice.getText()), purpose, buyername, pricing.validupto.split(" ")[0], String.valueOf(pricing.payid));
+
+                        }
+                        else
+                        {
+
+                            Baseconfig.SweetDialgos(4, ctx, "Information", " No internet connection found..try later ", "OK");
+
+                        }
 
                     }
+
 
                 }catch (Exception e)
                 {
-
+                    e.printStackTrace();
                 }
             }
         });
@@ -160,13 +189,34 @@ public class Plans_Adapter extends RecyclerView.Adapter<Plans_Adapter.PriceViewH
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+
+
             initListener(StudentCount, PayId);
             instamojoPay.start(activity, pay, listener);
+            UpdateResultStatus(StudentCount, PayId);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    private void UpdateResultStatus(String StudentCount, String PayId) {
+        try {
+            SQLiteDatabase db = Baseconfig.GetDb();
+
+            String UpdateStudentCount="Update Bind_InstituteInfo set IsPaid=1, PaidDate='"+Baseconfig.GetDate()+"', " +"StudentCount=StudentCount+'"+StudentCount+"', " +"PayId='"+PayId+"'";
+            Log.e("UpdateStudentCountQuery: ", UpdateStudentCount);
+            db.execSQL(UpdateStudentCount);//if ispaid==1
+            db.close();
+
+            UpdateToFirebase(PayId,StudentCount);
+
+            ((Activity)ctx).finish();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
 
     private void initListener(String StudentCount, String PayId) {
@@ -179,11 +229,7 @@ public class Plans_Adapter extends RecyclerView.Adapter<Plans_Adapter.PriceViewH
 
                     Toast.makeText(ctx, response, Toast.LENGTH_LONG).show();
 
-                    SQLiteDatabase db = Baseconfig.GetDb();
-                    db.execSQL("Update Bind_InstituteInfo set IsPaid=1, PaidDate='', StudentCount='"+StudentCount+"', PayId='"+PayId+"'");//if ispaid==1
-                    db.close();
-
-                    UpdateToFirebase(PayId,StudentCount);
+                    UpdateResultStatus(StudentCount, PayId);
 
                 }
 
@@ -214,7 +260,8 @@ public class Plans_Adapter extends RecyclerView.Adapter<Plans_Adapter.PriceViewH
             newContact.put("IsPaid", 1);
             newContact.put("PayId", PAYID);
             newContact.put("PaidDate", Baseconfig.Device_OnlyDate());
-            newContact.put("StudentCount", STUDENTCOUNT);
+            int getCurrentPlanCount = Integer.parseInt(Baseconfig.LoadValueInt("select StudentCount as dstatus from Bind_InstituteInfo where IsPaid=1 and UID='" + Baseconfig.App_UID + "'"));
+            newContact.put("StudentCount", getCurrentPlanCount+STUDENTCOUNT);
 
             db.collection(Baseconfig.FIREBASE_INSTITUTE_USERS).document(Baseconfig.App_UID).update(newContact)
                     .addOnSuccessListener(new OnSuccessListener<Void>() {

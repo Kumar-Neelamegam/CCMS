@@ -191,7 +191,6 @@ public class Splash extends RuntimePermissionsActivity implements ActivityCompat
 
                                 finish();
                                 Intent intent = new Intent(Splash.this, Institute_Registration.class);
-
                                 startActivity(intent);
 
                             } else {
@@ -243,6 +242,8 @@ public class Splash extends RuntimePermissionsActivity implements ActivityCompat
                             .build(),
                     RC_SIGN_IN);
 
+
+
         } catch (Exception e) {
 
             e.printStackTrace();
@@ -260,10 +261,21 @@ public class Splash extends RuntimePermissionsActivity implements ActivityCompat
         if (requestCode == RC_SIGN_IN) {
             IdpResponse response = IdpResponse.fromResultIntent(data);
             if (resultCode == RESULT_OK) {
-                // Successfully signed in
-                Toast.makeText(Splash.this, "Signing In Success", Toast.LENGTH_LONG).show();
-                startActivity(new Intent(Splash.this, Institute_Registration.class));
-                finish();
+
+                //insert / check
+                if(mFirebaseUser.isEmailVerified())
+                {
+                    // Successfully signed in
+                    Toast.makeText(Splash.this, "Signing In Success", Toast.LENGTH_LONG).show();
+                    startActivity(new Intent(Splash.this, Institute_Registration.class));
+                    finish();
+
+                    Toast.makeText(this, "Email verified..", Toast.LENGTH_SHORT).show();
+                }else
+                {
+                    Toast.makeText(this, "Email not verified..", Toast.LENGTH_SHORT).show();
+                }
+
             } else {
                 // Sign in failed, check response for error code
                 // Baseconfig.SweetDialgos(4,Splash.this, "Information", "Signin Failed (or) check your data connection...", "OK");

@@ -1,4 +1,4 @@
-package adapters;
+package core_modules;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
@@ -20,6 +20,8 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
+import adapters.Plans_Adapter;
+import adapters.Plans_Data;
 import utilities.Baseconfig;
 import vcc.coremodule.R;
 
@@ -102,8 +104,6 @@ public class PaymentPage extends AppCompatActivity {
             setSupportActionBar(toolbar);
             getSupportActionBar().setTitle("PLANS");
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-
             recycler_view = (RecyclerView) findViewById(R.id.recycler_view);
 
         } catch (Exception e) {

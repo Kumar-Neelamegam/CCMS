@@ -22,7 +22,11 @@ public class Login extends AppCompatActivity {
         setContentView(R.layout.activity_login_page);
 
 
-        LoadNotification();
+        try {
+            LoadNotification();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -32,8 +36,7 @@ public class Login extends AppCompatActivity {
          * */
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            NotificationManager mNotificationManager =
-                    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             int importance = NotificationManager.IMPORTANCE_HIGH;
             NotificationChannel mChannel = new NotificationChannel(Baseconfig.CHANNEL_ID, getString(R.string.app_name), importance);
             mChannel.setDescription(getString(R.string.app_name_extension));
