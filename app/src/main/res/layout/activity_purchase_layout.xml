@@ -1,0 +1,620 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:fbutton="http://schemas.android.com/tools"
+    android:background="@color/white"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="110dp"
+        android:background="@color/colorPrimary">
+
+
+
+        <android.support.design.widget.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/colorPrimary"
+                android:fitsSystemWindows="true"
+                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                app:contentInsetStartWithNavigation="0dp"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
+        </android.support.design.widget.AppBarLayout>
+
+    </LinearLayout>
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/spacing_medium"
+        android:layout_marginLeft="@dimen/spacing_middle"
+        android:layout_marginRight="@dimen/spacing_middle"
+        android:layout_marginTop="-45dp"
+        android:visibility="visible"
+        app:cardCornerRadius="6dp"
+        app:cardElevation="3dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="@dimen/spacing_mlarge">
+
+            <ImageView
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:src="@drawable/ic_classroom" />
+
+            <View
+                android:layout_width="@dimen/spacing_large"
+                android:layout_height="0dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:text="@string/app_name"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                    android:textColor="@color/colorPrimary"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:text="@string/app_name_extension"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                    android:textColor="@color/black" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:text="Full version plans and details"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                    android:textColor="@color/black" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+
+
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/footer"
+        android:layout_below="@+id/top_layout2"
+        android:background="@color/white"
+        android:layoutAnimation="@anim/layout_bottom_to_top_slide"
+        android:scrollbars="vertical" />
+
+
+
+
+    <!--   <android.support.v4.widget.NestedScrollView
+           android:id="@+id/nested_scroll_view"
+           android:layout_width="match_parent"
+           android:layout_height="match_parent"
+           android:layout_marginTop="-62dp"
+           android:scrollbars="none"
+           android:scrollingCache="true">
+
+           <LinearLayout
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:descendantFocusability="blocksDescendants"
+               android:orientation="vertical">
+
+               <View
+                   android:layout_width="0dp"
+                   android:layout_height="62dp" />
+
+               <LinearLayout
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:layout_marginBottom="@dimen/spacing_medium"
+                   android:layout_marginLeft="@dimen/spacing_middle"
+                   android:layout_marginRight="@dimen/spacing_middle"
+                   android:layout_marginTop="@dimen/spacing_middle"
+                   android:orientation="horizontal">
+
+                   <TextView
+                       android:layout_width="0dp"
+                       android:layout_height="wrap_content"
+                       android:layout_weight="1"
+                       android:gravity="center_vertical"
+                       android:text="Available Plans"
+                       android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
+                       android:textColor="@color/colorPrimary"
+                       android:textStyle="bold" />
+
+                   <TextView
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:gravity="center_vertical"
+                       android:text="3"
+                       android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
+                       android:textColor="@color/colorPrimary"
+                       android:textStyle="bold" />
+
+               </LinearLayout>
+
+               &lt;!&ndash; basic plan &ndash;&gt;
+               <android.support.v7.widget.CardView
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   app:cardBackgroundColor="@color/basic_plan"
+                   android:layout_marginBottom="@dimen/spacing_medium"
+                   android:layout_marginLeft="@dimen/spacing_middle"
+                   android:layout_marginRight="@dimen/spacing_middle"
+                   android:layout_marginTop="@dimen/spacing_middle"
+                   android:visibility="visible"
+                   app:cardCornerRadius="6dp"
+                   app:cardElevation="3dp">
+
+                   <LinearLayout
+                       android:layout_width="match_parent"
+                       android:layout_height="wrap_content"
+                       android:orientation="horizontal"
+                       android:padding="@dimen/spacing_mlarge">
+
+                       <LinearLayout
+                           android:layout_width="0dp"
+                           android:layout_height="wrap_content"
+                           android:layout_weight="2"
+                           android:orientation="vertical">
+
+
+
+                           <TextView
+                               android:layout_width="match_parent"
+                               android:layout_height="wrap_content"
+                               android:text="Valid Upto"
+                               android:textStyle="bold"
+                               android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
+                               android:textColor="@color/black" />
+
+                           <TextView
+                               android:id="@+id/basic_studentcount"
+                               android:layout_width="match_parent"
+                               android:layout_height="wrap_content"
+                               android:layout_marginTop="@dimen/spacing_medium"
+                               android:text="350 Students"
+                               android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
+                               android:textColor="@color/black" />
+
+                           <View
+                               android:layout_width="0dp"
+                               android:layout_height="@dimen/spacing_mlarge" />
+
+                           <TextView
+                               android:layout_width="match_parent"
+                               android:layout_height="wrap_content"
+                               android:text="Card Name"
+                               android:textStyle="bold"
+                               android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
+                               android:textColor="@color/black" />
+
+                           <TextView
+                               android:id="@+id/txtvw_cardname"
+                               android:layout_width="match_parent"
+                               android:layout_height="wrap_content"
+                               android:layout_marginTop="@dimen/spacing_medium"
+                               android:text="-"
+                               android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
+                               android:textColor="@color/black" />
+
+                           <View
+                               android:layout_width="0dp"
+                               android:layout_height="@dimen/spacing_mlarge" />
+
+                           <TextView
+                               android:layout_width="wrap_content"
+                               android:layout_height="50dp"
+                               android:gravity="center_vertical"
+                               android:text="BASIC"
+                               android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                               android:textColor="@color/black"
+                               android:textStyle="bold" />
+
+
+
+                       </LinearLayout>
+
+                       <LinearLayout
+                           android:layout_width="0dp"
+                           android:layout_height="wrap_content"
+                           android:layout_weight="1"
+                           android:orientation="vertical">
+
+
+
+                           <TextView
+                               android:layout_width="match_parent"
+                               android:layout_height="wrap_content"
+                               android:text="Per Student"
+                               android:textStyle="bold"
+                               android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
+                               android:textColor="@color/black" />
+
+                           <TextView
+                               android:layout_width="match_parent"
+                               android:layout_height="wrap_content"
+                               android:layout_marginTop="@dimen/spacing_medium"
+                               android:text="10 .Rs"
+                               android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
+                               android:textColor="@color/black" />
+
+                           <View
+                               android:layout_width="0dp"
+                               android:layout_height="@dimen/spacing_mlarge" />
+
+                           <TextView
+                               android:layout_width="match_parent"
+                               android:layout_height="wrap_content"
+                               android:text="Total Price (Rs.)"
+                               android:textStyle="bold"
+                               android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
+                               android:textColor="@color/black" />
+
+                           <TextView
+                               android:layout_width="match_parent"
+                               android:layout_height="wrap_content"
+                               android:layout_marginTop="@dimen/spacing_medium"
+                               android:text="3250"
+                               android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
+                               android:textColor="@color/black" />
+
+
+                           <View
+                               android:layout_width="0dp"
+                               android:layout_height="@dimen/spacing_mlarge" />
+
+                           <utilities.FButton
+                               android:id="@+id/bttn_pay1"
+                               android:layout_width="wrap_content"
+                               android:layout_height="wrap_content"
+                               android:layout_alignParentEnd="true"
+                               android:layout_alignParentTop="true"
+                               android:layout_weight="1"
+                               android:text="PAY"
+                               android:layout_gravity="end|right"
+                               android:textColor="@color/white"
+                               fbutton:buttonColor="@color/fbutton_color_green_sea"
+                               fbutton:cornerRadius="5dp"
+                               fbutton:shadowColor="@color/ash"
+                               fbutton:shadowEnabled="true"
+                               fbutton:shadowHeight="5dp" />
+
+
+                       </LinearLayout>
+
+
+                   </LinearLayout>
+
+               </android.support.v7.widget.CardView>
+
+
+               &lt;!&ndash; pro plan &ndash;&gt;
+               <android.support.v7.widget.CardView
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   app:cardBackgroundColor="@color/pro_plan"
+                   android:layout_marginBottom="@dimen/spacing_medium"
+                   android:layout_marginLeft="@dimen/spacing_middle"
+                   android:layout_marginRight="@dimen/spacing_middle"
+                   android:layout_marginTop="@dimen/spacing_middle"
+                   android:visibility="visible"
+                   app:cardCornerRadius="6dp"
+                   app:cardElevation="3dp">
+
+                   <LinearLayout
+                       android:layout_width="match_parent"
+                       android:layout_height="wrap_content"
+                       android:orientation="horizontal"
+                       android:padding="@dimen/spacing_mlarge">
+
+                       <LinearLayout
+                           android:layout_width="0dp"
+                           android:layout_height="wrap_content"
+                           android:layout_weight="2"
+                           android:orientation="vertical">
+
+
+                           <TextView
+                               android:layout_width="match_parent"
+                               android:layout_height="wrap_content"
+                               android:text="Valid Upto"
+                               android:textStyle="bold"
+                               android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
+                               android:textColor="@color/black" />
+
+                           <TextView
+                               android:layout_width="match_parent"
+                               android:layout_height="wrap_content"
+                               android:layout_marginTop="@dimen/spacing_medium"
+                               android:text="700 Students"
+                               android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
+                               android:textColor="@color/black" />
+
+                           <View
+                               android:layout_width="0dp"
+                               android:layout_height="@dimen/spacing_mlarge" />
+
+                           <TextView
+                               android:layout_width="match_parent"
+                               android:layout_height="wrap_content"
+                               android:text="Card Name"
+                               android:textStyle="bold"
+                               android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
+                               android:textColor="@color/black" />
+
+                           <TextView
+                               android:id="@+id/customer_name2"
+                               android:layout_width="match_parent"
+                               android:layout_height="wrap_content"
+                               android:layout_marginTop="@dimen/spacing_medium"
+                               android:text="-"
+                               android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
+                               android:textColor="@color/black" />
+
+                           <View
+                               android:layout_width="0dp"
+                               android:layout_height="@dimen/spacing_mlarge" />
+
+                           <TextView
+                               android:layout_width="wrap_content"
+                               android:layout_height="50dp"
+                               android:gravity="center_vertical"
+                               android:text="PRO"
+                               android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                               android:textColor="@color/black"
+                               android:textStyle="bold" />
+
+
+                       </LinearLayout>
+
+                       <LinearLayout
+                           android:layout_width="0dp"
+                           android:layout_height="wrap_content"
+                           android:layout_weight="1"
+                           android:orientation="vertical">
+
+                           <TextView
+                               android:layout_width="match_parent"
+                               android:layout_height="wrap_content"
+                               android:text="Per Student"
+                               android:textStyle="bold"
+                               android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
+                               android:textColor="@color/black" />
+
+                           <TextView
+                               android:layout_width="match_parent"
+                               android:layout_height="wrap_content"
+                               android:layout_marginTop="@dimen/spacing_medium"
+                               android:text="8 .Rs"
+                               android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
+                               android:textColor="@color/black" />
+
+                           <View
+                               android:layout_width="0dp"
+                               android:layout_height="@dimen/spacing_mlarge" />
+
+                           <TextView
+                               android:layout_width="match_parent"
+                               android:layout_height="wrap_content"
+                               android:text="Total Price (Rs.)"
+                               android:textStyle="bold"
+                               android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
+                               android:textColor="@color/black" />
+
+                           <TextView
+                               android:layout_width="match_parent"
+                               android:layout_height="wrap_content"
+                               android:layout_marginTop="@dimen/spacing_medium"
+                               android:text="5600"
+                               android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
+                               android:textColor="@color/black" />
+
+
+                           <View
+                               android:layout_width="0dp"
+                               android:layout_height="@dimen/spacing_mlarge" />
+
+                           <utilities.FButton
+                               android:id="@+id/bttn_pay2"
+                               android:layout_width="wrap_content"
+                               android:layout_height="wrap_content"
+                               android:layout_alignParentEnd="true"
+                               android:layout_alignParentTop="true"
+                               android:layout_weight="1"
+                               android:text="PAY"
+                               android:layout_gravity="end|right"
+                               android:textColor="@color/white"
+                               fbutton:buttonColor="@color/fbutton_color_green_sea"
+                               fbutton:cornerRadius="5dp"
+                               fbutton:shadowColor="@color/ash"
+                               fbutton:shadowEnabled="true"
+                               fbutton:shadowHeight="5dp" />
+
+
+                       </LinearLayout>
+
+                   </LinearLayout>
+
+               </android.support.v7.widget.CardView>
+
+
+               &lt;!&ndash; ultimate plan &ndash;&gt;
+               <android.support.v7.widget.CardView
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   app:cardBackgroundColor="@color/ultimate_plan"
+                   android:layout_marginBottom="@dimen/spacing_medium"
+                   android:layout_marginLeft="@dimen/spacing_middle"
+                   android:layout_marginRight="@dimen/spacing_middle"
+                   android:layout_marginTop="@dimen/spacing_middle"
+                   android:visibility="visible"
+                   app:cardCornerRadius="6dp"
+                   app:cardElevation="3dp">
+
+                   <LinearLayout
+                       android:layout_width="match_parent"
+                       android:layout_height="wrap_content"
+                       android:orientation="horizontal"
+                       android:padding="@dimen/spacing_mlarge">
+
+                       <LinearLayout
+                           android:layout_width="0dp"
+                           android:layout_height="wrap_content"
+                           android:layout_weight="2"
+                           android:orientation="vertical">
+
+
+                           <TextView
+                               android:layout_width="match_parent"
+                               android:layout_height="wrap_content"
+                               android:text="Valid Upto"
+                               android:textStyle="bold"
+                               android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
+                               android:textColor="@color/black" />
+
+                           <TextView
+                               android:layout_width="match_parent"
+                               android:layout_height="wrap_content"
+                               android:layout_marginTop="@dimen/spacing_medium"
+                               android:text="Unlimited Students"
+                               android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
+                               android:textColor="@color/black" />
+
+                           <View
+                               android:layout_width="0dp"
+                               android:layout_height="@dimen/spacing_mlarge" />
+
+                           <TextView
+                               android:layout_width="match_parent"
+                               android:layout_height="wrap_content"
+                               android:text="Card Name"
+                               android:textStyle="bold"
+                               android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
+                               android:textColor="@color/black" />
+
+                           <TextView
+                               android:layout_width="match_parent"
+                               android:layout_height="wrap_content"
+                               android:layout_marginTop="@dimen/spacing_medium"
+                               android:text="-"
+                               android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
+                               android:textColor="@color/black" />
+
+                           <View
+                               android:layout_width="0dp"
+                               android:layout_height="@dimen/spacing_mlarge" />
+
+                           <TextView
+                               android:layout_width="wrap_content"
+                               android:layout_height="50dp"
+                               android:gravity="center_vertical"
+                               android:text="ULTIMATE"
+                               android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                               android:textColor="@color/black"
+                               android:textStyle="bold" />
+
+
+                       </LinearLayout>
+
+                       <LinearLayout
+                           android:layout_width="0dp"
+                           android:layout_height="wrap_content"
+                           android:layout_weight="1"
+                           android:orientation="vertical">
+
+
+                           <TextView
+                               android:layout_width="match_parent"
+                               android:layout_height="wrap_content"
+                               android:text="Per Student"
+                               android:textStyle="bold"
+                               android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
+                               android:textColor="@color/black" />
+
+                           <TextView
+                               android:layout_width="match_parent"
+                               android:layout_height="wrap_content"
+                               android:layout_marginTop="@dimen/spacing_medium"
+                               android:text="N/A"
+                               android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
+                               android:textColor="@color/black" />
+
+                           <View
+                               android:layout_width="0dp"
+                               android:layout_height="@dimen/spacing_mlarge" />
+
+                           <TextView
+                               android:layout_width="match_parent"
+                               android:layout_height="wrap_content"
+                               android:text="Total Price (Rs.)"
+                               android:textStyle="bold"
+                               android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
+                               android:textColor="@color/black" />
+
+                           <TextView
+                               android:layout_width="match_parent"
+                               android:layout_height="wrap_content"
+                               android:layout_marginTop="@dimen/spacing_medium"
+                               android:text="10600"
+                               android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
+                               android:textColor="@color/black" />
+
+                           <View
+                               android:layout_width="0dp"
+                               android:layout_height="@dimen/spacing_mlarge" />
+                           <utilities.FButton
+                               android:id="@+id/bttn_pay3"
+                               android:layout_width="wrap_content"
+                               android:layout_height="wrap_content"
+                               android:layout_alignParentEnd="true"
+                               android:layout_alignParentTop="true"
+                               android:layout_weight="1"
+                               android:text="PAY"
+                               android:layout_gravity="end|right"
+                               android:textColor="@color/white"
+                               fbutton:buttonColor="@color/fbutton_color_green_sea"
+                               fbutton:cornerRadius="5dp"
+                               fbutton:shadowColor="@color/ash"
+                               fbutton:shadowEnabled="true"
+                               fbutton:shadowHeight="5dp" />
+
+                       </LinearLayout>
+
+                   </LinearLayout>
+
+               </android.support.v7.widget.CardView>
+
+
+           </LinearLayout>
+
+       </android.support.v4.widget.NestedScrollView>
+   -->
+</LinearLayout>

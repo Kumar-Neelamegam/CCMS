@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:fbutton="http://schemas.android.com/tools"
+    android:orientation="vertical">
+
+
+    <TextView
+        android:text="Scan Student Id"
+        android:background="@color/colorPrimary"
+        android:textColor="@color/white"
+        android:padding="15dp"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textStyle="bold"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <View
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="1dip"/>
+
+    //1.
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="@color/colorPrimary"
+        android:orientation="vertical">
+
+
+        <com.journeyapps.barcodescanner.DecoratedBarcodeView
+            android:id="@+id/barcode_scanner"
+
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+
+
+    //2.
+
+    <LinearLayout
+        android:background="@color/fbutton_color_clouds"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:padding="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@null"
+                android:drawableLeft="@drawable/ic_pause"
+                android:onClick="pause"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="Pause" />
+
+            <View
+                android:background="@color/colorPrimary"
+                android:layout_width="1dip"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_height="match_parent"/>
+
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@null"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:drawableLeft="@drawable/ic_resume"
+                android:onClick="resume"
+                android:text="Resume" />
+
+            <utilities.FButton
+                android:id="@+id/btn_close"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="Close"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                android:textColor="@color/white"
+                fbutton:buttonColor="@color/colorPrimaryDark"
+                fbutton:cornerRadius="5dp"
+                fbutton:shadowColor="@color/ash"
+                fbutton:shadowEnabled="true"
+                fbutton:shadowHeight="5dp" />
+
+        </LinearLayout>
+        <View
+        android:background="@color/colorPrimary"
+        android:layout_width="match_parent"
+        android:layout_height="1dip"/>
+
+
+     <!--   <ImageView
+            android:layout_weight="1"
+            android:id="@+id/barcodePreview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+-->
+
+
+    </LinearLayout>
+
+
+</LinearLayout>
