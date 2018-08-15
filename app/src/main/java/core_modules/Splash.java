@@ -1,11 +1,12 @@
 package core_modules;
 
 import android.Manifest;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.widget.ProgressBar;
@@ -17,14 +18,11 @@ import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog;
 
 import java.io.File;
@@ -34,7 +32,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
+import background.Webservice;
 import io.fabric.sdk.android.Fabric;
 import utilities.Baseconfig;
 import utilities.RuntimePermissionsActivity;
@@ -74,11 +74,11 @@ public class Splash extends RuntimePermissionsActivity implements ActivityCompat
         setContentView(R.layout.activity_splash);
 
 
+
         try {
 
             //For permission
             isStoragePermissionGranted();
-
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -135,6 +135,10 @@ public class Splash extends RuntimePermissionsActivity implements ActivityCompat
 
         }
 
+
+
+
+
     }
 
     //****************************************************************************
@@ -149,13 +153,6 @@ public class Splash extends RuntimePermissionsActivity implements ActivityCompat
         progressBar = findViewById(R.id.spin_kit);
 
         progress_status = findViewById(R.id.textprgrs);
-
-
-        try {
-            Baseconfig.getInstitueValues();
-        } catch (Exception e) {
-
-        }
 
 
     }
@@ -186,12 +183,15 @@ public class Splash extends RuntimePermissionsActivity implements ActivityCompat
 
                             String Query = "select Id as dstatus from Bind_InstituteInfo";
                             boolean Registration = Baseconfig.LoadBooleanStatus(Query);
-
+                            Webservice.startWebservice();
                             if (mFirebaseUser != null && Registration) { //both case passed {login, registration}
 
                                  finish();
                                 Intent intent = new Intent(Splash.this, Task_Navigation.class);
                                 startActivity(intent);
+
+
+
 
 
                             } else if (mFirebaseUser != null) //
@@ -204,6 +204,12 @@ public class Splash extends RuntimePermissionsActivity implements ActivityCompat
                             } else {
 
                                 DoLogin();
+
+                            }
+
+                            try {
+                                Baseconfig.getInstitueValues();
+                            } catch (Exception e) {
 
                             }
 
@@ -297,38 +303,96 @@ public class Splash extends RuntimePermissionsActivity implements ActivityCompat
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         Query docRef = db.collection(Baseconfig.FIREBASE_INSTITUTE_USERS).whereEqualTo("UID", mFirebaseAuth.getCurrentUser().getUid());
-        docRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    List<DocumentSnapshot> document = task.getResult().getDocuments();
-                    if (document != null && document.size()>0) {
-                        Log.d("", "DocumentSnapshot data: " + task.getResult().getDocuments().size());
+        docRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                List<DocumentSnapshot> document = task.getResult().getDocuments();
+                if (document != null && document.size()>0) {
+                    Log.d("", "DocumentSnapshot data: " + task.getResult().getDocuments().size());
 
-                        //Data insert
-                        Toast.makeText(Splash.this, "Signing In Success", Toast.LENGTH_LONG).show();
-                        startActivity(new Intent(Splash.this, Task_Navigation.class));
-                        finish();
-
-                    } else {
-                        Log.d("", "No such document");
-
-                        Toast.makeText(Splash.this, "Signing In Success", Toast.LENGTH_LONG).show();
-                        startActivity(new Intent(Splash.this, Institute_Registration.class));
-                        finish();
+                    for (DocumentSnapshot documentSnapshot : document) {
+                        Map<String,Object> values=documentSnapshot.getData();
+                        insertUserDetails(values);
                     }
 
 
+                    //Data insert
+                    Toast.makeText(Splash.this, "Signing In Success", Toast.LENGTH_LONG).show();
+                    startActivity(new Intent(Splash.this, Task_Navigation.class));
+                    finish();
+
                 } else {
+                    Log.d("", "No such document");
 
-
-                    Log.d("", "get failed with ", task.getException());
+                    Toast.makeText(Splash.this, "Signing In Success", Toast.LENGTH_LONG).show();
+                    startActivity(new Intent(Splash.this, Institute_Registration.class));
+                    finish();
                 }
+
+
+            } else {
+
+
+                Log.d("", "get failed with ", task.getException());
             }
         });
 
 
     }
+
+
+
+    private void insertUserDetails(Map<String,Object> value) {
+        try {
+            SQLiteDatabase db = Baseconfig.GetDb();
+            ContentValues values = new ContentValues();
+
+            String StudentCount =(String) value.get("StudentCount");
+            String ActDate =(String) value.get("ActDate");
+            String SMSOption =(String) value.get("SMSOption");
+            String Logo =(String) value.get("Logo");
+            String Institute_Name =(String) value.get("Institute_Name");
+            String PaidDate =(String) value.get("PaidDate");
+            String SMSSID =(String) value.get("SMSSID");
+            String EmailPassword =(String) value.get("EmailPassword");
+            String Owner_Name =(String) value.get("Owner_Name");
+            String Email =(String) value.get("Email");
+            String IsActive =(String) value.get("IsActive");
+            String UID =(String) value.get("UID");
+            String Mobile =(String) value.get("Mobile");
+            String PayId =(String) value.get("PayId");
+            String SMSPassword =(String) value.get("SMSPassword");
+            String SMSUsername =(String) value.get("SMSUsername");
+            String Institute_Address =(String) value.get("Institute_Address");
+            String IsUpdate =(String) value.get("IsUpdate");
+            String IsPaid =(String) value.get("IsPaid");
+
+            values.put("Institute_Name", Institute_Name);
+            values.put("Institute_Address", Institute_Address);
+            values.put("Owner_Name", Owner_Name);
+            values.put("Mobile", Mobile);
+            values.put("Email", Email);
+            values.put("EmailPassword", EmailPassword);
+            values.put("SMSUsername", SMSUsername);
+            values.put("SMSPassword", SMSPassword);
+            values.put("SMSSID", SMSSID);
+            values.put("SMSOption", SMSOption);
+            values.put("Logo", Logo);
+            values.put("IsActive", IsActive);
+            values.put("IsUpdate", IsUpdate);
+            values.put("ActDate", ActDate);
+            values.put("UID", UID);
+            values.put("IsPaid",IsPaid);
+            values.put("PayId", PayId);
+            values.put("PaidDate", PaidDate);
+            values.put("StudentCount", StudentCount);
+
+            db.insert("Bind_InstituteInfo", null, values);
+            db.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
     public void isStoragePermissionGranted() {
 
@@ -341,7 +405,8 @@ public class Splash extends RuntimePermissionsActivity implements ActivityCompat
                         Manifest.permission.ACCESS_WIFI_STATE,
                         Manifest.permission.CAMERA,
                         Manifest.permission.READ_PHONE_STATE,
-                        Manifest.permission.CHANGE_WIFI_STATE
+                        Manifest.permission.CHANGE_WIFI_STATE,
+                        Manifest.permission.SEND_SMS
                 }, R.string
                         .runtime_permissions_txt
                 , REQUEST_PERMISSIONS);
@@ -439,29 +504,33 @@ public class Splash extends RuntimePermissionsActivity implements ActivityCompat
 
             copyLogoFileAssets();
 
-            final String DB_DESTINATION = Baseconfig.DATABASE_FILE_PATH + "/vcc.db";
+            try {
+                final String DB_DESTINATION = Baseconfig.DATABASE_FILE_PATH + "/vcc.db";
 
-            // Check if the database exists before copying
-            boolean initialiseDatabase = (new File(DB_DESTINATION)).exists();
+                // Check if the database exists before copying
+                boolean initialiseDatabase = (new File(DB_DESTINATION)).exists();
 
-            if (initialiseDatabase == false) {
-                Log.i("Processing...", "Copying Database");
-                // Open the .db file in your assets directory
-                InputStream is = Splash.this.getApplicationContext().getAssets().open("vcc.db");
+                if (initialiseDatabase == false) {
+                    Log.i("Processing...", "Copying Database");
+                    // Open the .db file in your assets directory
+                    InputStream is = Splash.this.getApplicationContext().getAssets().open("vcc.db");
 
-                // Copy the database into the destination
-                OutputStream os = new FileOutputStream(DB_DESTINATION);
-                byte[] buffer = new byte[1024];
-                int length;
-                while ((length = is.read(buffer)) > 0) {
-                    os.write(buffer, 0, length);
+                    // Copy the database into the destination
+                    OutputStream os = new FileOutputStream(DB_DESTINATION);
+                    byte[] buffer = new byte[1024];
+                    int length;
+                    while ((length = is.read(buffer)) > 0) {
+                        os.write(buffer, 0, length);
+                    }
+                    os.flush();
+
+                    os.close();
+                    is.close();
+
+
                 }
-                os.flush();
-
-                os.close();
-                is.close();
-
-
+            } catch (IOException e) {
+                e.printStackTrace();
             }
 
 

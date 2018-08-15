@@ -81,7 +81,8 @@ public class Plans_Adapter extends RecyclerView.Adapter<Plans_Adapter.PriceViewH
         holder.totalPrice.setText(pricing.totalprice);
         holder.cardView.setCardBackgroundColor(Color.parseColor(pricing.cardcolor));
 
-        if(!Baseconfig.ExpiryStatus || !sharedPreference.getBoolean(Baseconfig.Preference_ExpiryStatus))
+     //   if(!Baseconfig.ExpiryStatus || !sharedPreference.getBoolean(Baseconfig.Preference_ExpiryStatus))
+        if(!sharedPreference.getBoolean(Baseconfig.Preference_TrailStatus))
         {
             if(position==0)
             {
@@ -105,6 +106,7 @@ public class Plans_Adapter extends RecyclerView.Adapter<Plans_Adapter.PriceViewH
                     if(position==0 && holder.Payment.getText().equals("Accept"))//Trail user
                     {
                         UpdateResultStatus("5","0");
+                        sharedPreference.setBoolean(Baseconfig.Preference_TrailStatus, true);//Full data
 
                         return;
                     }else

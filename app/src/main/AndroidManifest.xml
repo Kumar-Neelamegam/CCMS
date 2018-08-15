@@ -13,6 +13,8 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.WRITE_SMS" />
 
     <supports-screens
         android:anyDensity="true"
@@ -30,6 +32,24 @@
         android:icon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
+
+
+
+        <service android:name="firebase.MyFirebaseInstanceIDService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+            </intent-filter>
+        </service>
+
+        <service android:name="firebase.FireBaseMessaging">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+
+
+
         <activity android:name="core_modules.Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -38,19 +58,6 @@
             </intent-filter>
         </activity>
 
-        <service
-            android:name="utilities.MyFirebaseInstanceIdService">
-            <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
-            </intent-filter>
-        </service>
-
-        <service
-            android:name="utilities.MyFirebaseMessagingService">
-            <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
-            </intent-filter>
-        </service>
         <!--Dashboard_Activities =========================================================================-->
 
         <activity
@@ -163,7 +170,7 @@
 
 
 
-        //Masters==========================================================================================
+     <!--   //Masters========================================================================================== -->
         <activity
             android:name="masters.Mstr_Batch"
             android:screenOrientation="portrait"
@@ -191,7 +198,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
 
 
-        //Reports==========================================================================================
+       <!-- //Reports========================================================================================== -->
         <activity
             android:name="reports.Reports_Attendance"
             android:windowSoftInputMode="stateAlwaysHidden"
@@ -211,7 +218,7 @@
             android:name="core_modules.PaymentPage"
             android:windowSoftInputMode="stateAlwaysHidden"
             android:theme="@style/AppTheme.NoActionBar" />
-        //==========================================================================================
+       <!-- //========================================================================================== -->
 
 
     <meta-data android:name="instamojo.orderauth.url"

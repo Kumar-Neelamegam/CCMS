@@ -366,8 +366,9 @@ public class Mstr_Test extends AppCompatActivity {
         values.put("Date_Of_Test", Str_DateOfTest);
         values.put("MaxMarks", Str_MaxMarks);
         values.put("IsActive", Str_Isactive);
-        values.put("IsUpdate", 0);
-        values.put("ActDate", Baseconfig.GetDate());
+        values.put("IsUpdate", 0);     values.put("ServerIsUpdate",0);
+        values.put("ActDate", Baseconfig.GetDate());   values.put("FUID", Baseconfig.App_UID);
+
         db.insert("Mstr_Test", null, values);
         Log.e("Inserted Values: ", String.valueOf(values));
 

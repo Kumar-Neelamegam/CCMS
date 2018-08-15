@@ -314,6 +314,7 @@ public class Institute_Registration extends AppCompatActivity implements Imageut
             values.put("PayId", "");
             values.put("PaidDate", "");
             values.put("StudentCount", "");
+            values.put("FirebaseToken", Baseconfig.FirebaseToken);
 
 
             db.insert("Bind_InstituteInfo", null, values);

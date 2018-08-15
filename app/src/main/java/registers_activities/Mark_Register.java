@@ -394,16 +394,28 @@ public class Mark_Register extends AppCompatActivity {
 
     void LoadSMSSettings() {
 
-        if (Baseconfig.CheckNW(Mark_Register.this)) {
-            if (Baseconfig.SMS_Username.length() > 0 && Baseconfig.SMS_Password.length() > 0) {
+        if (Baseconfig.CheckNW(this)) {
+
+            String SMSOption_Query="select SMSOption as dstatus from Bind_InstituteInfo";
+            int SMSOption = Integer.parseInt(Baseconfig.LoadValue(SMSOption_Query));
+
+            if(SMSOption==1)
+            {
                 new SendSMS().execute();
-            } else {
-                Baseconfig.SweetDialgos(3, Mark_Register.this, "Information", "Get username and password from SMS INDIA HUB to send sms..\nadd it in profile..", "OK");
+            }else if(SMSOption==2 && Baseconfig.SMS_Username.length()>0 && Baseconfig.SMS_Password.length()>0)
+            {
+                new SendSMS().execute();
+            }
+            else
+            {
+                Baseconfig.SweetDialgos(3, this, "Information", "Get username and password from SMS INDIA HUB to send sms..\nadd it in profile..", "OK");
 
             }
+
         } else {
-            Baseconfig.SweetDialgos(3, Mark_Register.this, "Information", "No internet connectivity available..\nEnable data connection from settings..", "OK");
+            Baseconfig.SweetDialgos(3, this, "Information", "No internet connectivity available..\nEnable data connection from settings..", "OK");
         }
+
 
     }
     //**********************************************************************************************

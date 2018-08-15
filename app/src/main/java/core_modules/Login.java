@@ -7,8 +7,8 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
+import firebase.MyNotificationManager;
 import utilities.Baseconfig;
-import utilities.MyNotificationManager;
 import vcc.coremodule.R;
 
 public class Login extends AppCompatActivity {

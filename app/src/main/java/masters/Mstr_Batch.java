@@ -386,8 +386,9 @@ public class Mstr_Batch extends AppCompatActivity {
         values.put("Wednesday", Str_Wed);
         values.put("Thursday", Str_Thu);
         values.put("Friday", Str_Fri);
-        values.put("Sat", Str_Sat);
-        values.put("Sun", Str_Sun);
+        values.put("Sat", Str_Sat);     values.put("ServerIsUpdate",0);
+        values.put("Sun", Str_Sun);   values.put("FUID", Baseconfig.App_UID);
+
         db.insert("Mstr_Batch", null, values);
         db.close();
 

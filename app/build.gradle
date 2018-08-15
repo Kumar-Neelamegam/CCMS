@@ -34,7 +34,7 @@ android {
 
     dexOptions {
         javaMaxHeapSize "4g" //specify the heap size for the dex process
-        incremental true
+       // incremental true
     }
 }
 
@@ -85,6 +85,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-messaging:17.1.0'
 
 
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jre7:1.2.41'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.2.41'
+    implementation 'de.hdodenhof:circleimageview:2.1.0'
+
 }
 

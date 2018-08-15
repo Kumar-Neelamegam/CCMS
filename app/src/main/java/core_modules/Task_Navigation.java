@@ -37,6 +37,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 
+import bolts.Task;
 import entry_activities.Enroll_Students;
 import entry_activities.Mark_Entry;
 import entry_activities.Send_SMS;
@@ -515,6 +516,13 @@ public class Task_Navigation extends AppCompatActivity {
 
                 break;
 
+            case R.id.items11:
+                onSectionAttached(11, menuItem);
+
+                // fragmentClass = PinkConnection.class;
+
+                break;
+
 
         }
 
@@ -531,6 +539,8 @@ public class Task_Navigation extends AppCompatActivity {
         Fragment fragment = null;
         FragmentManager fragmentManager;
 
+        String Query = "select IsPaid as dstatus1 from Bind_InstituteInfo where IsPaid=1 and UID='" + Baseconfig.App_UID + "'";
+        boolean getPaidStatus = Baseconfig.LoadReportsBooleanStatus(Query);
 
         switch (number) {
 
@@ -579,25 +589,48 @@ public class Task_Navigation extends AppCompatActivity {
                 break;
 
             case 4:
-                BlockUser();
-                //Task_Navigation.this.finish();
-                //startActivity(new Intent(Task_Navigation.this, Students_Register.class));
+
+                if (getPaidStatus) {
+                    Task_Navigation.this.finish();
+                    startActivity(new Intent(Task_Navigation.this, Students_Register.class));
+
+                }else
+                {
+                    BlockUser();
+
+
+                }
 
                 break;
 
 
             case 5:
-                BlockUser();
-                //Task_Navigation.this.finish();
-                //startActivity(new Intent(Task_Navigation.this, Attendance_Register.class));
+
+
+                if (getPaidStatus) {
+                    Task_Navigation.this.finish();
+                    startActivity(new Intent(Task_Navigation.this, Attendance_Register.class));
+                }else
+                {
+                    BlockUser();
+
+
+                }
 
                 break;
 
 
             case 6:
-                BlockUser();
-                //Task_Navigation.this.finish();
-                //startActivity(new Intent(Task_Navigation.this, Mark_Register.class));
+
+                if (getPaidStatus) {
+                    Task_Navigation.this.finish();
+                    startActivity(new Intent(Task_Navigation.this, Mark_Register.class));
+                }else
+                {
+                    BlockUser();
+
+
+                }
 
                 break;
 
@@ -612,21 +645,47 @@ public class Task_Navigation extends AppCompatActivity {
 
             case 8:
 
-                BlockUser();
-                //Task_Navigation.this.finish();
-                //startActivity(new Intent(Task_Navigation.this, Reports.class));
+                if (getPaidStatus) {
+                    Task_Navigation.this.finish();
+                    startActivity(new Intent(Task_Navigation.this, Reports.class));
+                }else
+                {
+                    BlockUser();
+
+
+                }
 
                 break;
 
             case 9:
-                BlockUser();
-                //Task_Navigation.this.finish();
-                //startActivity(new Intent(Task_Navigation.this, Send_SMS.class));
+
+                if (getPaidStatus) {
+                    Task_Navigation.this.finish();
+                    startActivity(new Intent(Task_Navigation.this, Send_SMS.class));
+                }else
+                {
+                    BlockUser();
+
+
+                }
 
                 break;
 
 
             case 10:
+
+
+                try {
+                    Intent payment=new Intent(Task_Navigation.this, PaymentPage.class);
+                    startActivity(payment);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                break;
+
+
+            case 11:
 
                 new SweetAlertDialog(Task_Navigation.this, SweetAlertDialog.WARNING_TYPE)
                         .setTitleText(this.getResources().getString(R.string.alert))
@@ -673,10 +732,19 @@ public class Task_Navigation extends AppCompatActivity {
 
     public void BlockUser()
     {
-        new SweetAlertDialog(Task_Navigation.this)
+        /*new SweetAlertDialog(Task_Navigation.this)
                 .setTitleText("Information")
                 .setContentText("This is demo version.. If need you full version\nContact: N.Muthukumar, 9940741229, kumargtaiv@gmail.com")
-                .show();
+                .show();*/
+
+
+        try {
+            Intent payment=new Intent(Task_Navigation.this, PaymentPage.class);
+            startActivity(payment);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
 
     }
     //*******************************************************************************************************

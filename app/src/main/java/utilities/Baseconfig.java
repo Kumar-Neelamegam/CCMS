@@ -12,8 +12,10 @@ import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.os.Environment;
 import android.telephony.SmsManager;
 import android.telephony.TelephonyManager;
@@ -77,15 +79,25 @@ public class Baseconfig {
     public static String FIREBASE_PLANS="Plans";
     public static String FIREBASE_PURCHASES="Purchases";
 
+    public static final String CHANNEL_ID = "my_channel_01";
+    public static final String CHANNEL_NAME = "CCMS";
+    public static final String CHANNEL_DESCRIPTION = "Coaching centre management system";
 
-    public static String CHANNEL_ID = "my_channel_01";
+    public static String FirebaseToken="";
+
+
+    public static final String  FirebaseToken_Str = "Token";
+
+
 
     public static String DATABASE_FILE_PATH = Environment.getExternalStorageDirectory().getPath() + "/vcc";
     public static String DATABASE_NAME = DATABASE_FILE_PATH + File.separator + "vcc.db";
     public static String LogoImgPath = "";
     public static String StudentImgPath = "";
-    public static String MailID = "info.vetricoachingcentre@gmail.com";
-    public static String MailPassword = "vcc2017$$";
+  //  public static String MailID = "info.vetricoachingcentre@gmail.com";
+    public static String MailID = "info.ccms2k16@gmail.com";
+    //public static String MailPassword = "vcc2017$$";
+    public static String MailPassword = "CCMS2018$$";
     public static String SMS_Username = "";
     public static String SMS_Password = "";
     public static String SMS_SID = "";
@@ -94,6 +106,7 @@ public class Baseconfig {
     public static boolean ExpiryStatus = false;
 
     public static String Preference_ExpiryStatus = "ExpiryStatus";
+    public static String Preference_TrailStatus = "TrailStatus";
 
     //*********************************************************************************
     public static Dialog showCustomDialog(String title, String message, Activity ctx) {
@@ -1090,7 +1103,12 @@ public class Baseconfig {
     public static void sendSMS(String phoneNo, String msg, Context ctx) {
         try {
             SmsManager smsManager = SmsManager.getDefault();
-            smsManager.sendTextMessage(phoneNo, null, msg, null, null);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                smsManager.sendMultimediaMessage(ctx, Uri.parse(phoneNo), msg, null, null);
+            }else
+            {
+                Toast.makeText(ctx, "SMS through mobile is not possible..\nchoose sms gateway option from institute profile..", Toast.LENGTH_SHORT).show();
+            }
         } catch (Exception ex) {
             ex.printStackTrace();
         }

@@ -78,6 +78,14 @@
 
         <item
             android:id="@+id/items10"
+            android:actionMenuTextColor="@color/white"
+            android:checked="false"
+            android:icon="@drawable/ic_action_package"
+            android:title="@string/packages" />
+
+
+        <item
+            android:id="@+id/items11"
             android:actionMenuTextColor="@color/colorPrimary"
             android:checked="false"
             android:icon="@drawable/ic_menu_signout"

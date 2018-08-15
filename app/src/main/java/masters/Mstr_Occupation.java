@@ -190,7 +190,9 @@ public class Mstr_Occupation extends AppCompatActivity {
         values.put("Occupation_Name", Str_Occupation);
         values.put("IsActive", Str_Isactive);
         values.put("IsUpdate", "0");
-        values.put("ActDate", Baseconfig.GetDate());
+        values.put("ServerIsUpdate",0);
+        values.put("ActDate", Baseconfig.GetDate());   values.put("FUID", Baseconfig.App_UID);
+
         db.insert("Mstr_Occupation", null, values);
         db.close();
         ShowSuccessDialog("Data added to masters successfully..");

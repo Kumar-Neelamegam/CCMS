@@ -195,8 +195,9 @@ public class Mstr_School  extends AppCompatActivity {
 
         values.put("School_Name", Str_School);
         values.put("IsActive", Str_Isactive);
-        values.put("IsUpdate", "0");
-        values.put("ActDate", Baseconfig.GetDate());
+        values.put("IsUpdate", "0");     values.put("ServerIsUpdate",0);
+        values.put("ActDate", Baseconfig.GetDate());   values.put("FUID", Baseconfig.App_UID);
+
         db.insert("Mstr_School", null, values);
         db.close();
 

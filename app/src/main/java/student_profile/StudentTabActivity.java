@@ -191,9 +191,17 @@ public class StudentTabActivity extends AppCompatActivity {
                             Delete(SID);
                         } else if (items[item].toString().equalsIgnoreCase("Send UnPaid Fee - SMS Notification")) {
                             if (Baseconfig.CheckNW(StudentTabActivity.this)) {
-                                if(Baseconfig.SMS_Username.length()>0 && Baseconfig.SMS_Password.length()>0)
+
+                                String SMSOption_Query="select SMSOption as dstatus from Bind_InstituteInfo";
+                                int SMSOption = Integer.parseInt(Baseconfig.LoadValue(SMSOption_Query));
+
+                                if(SMSOption==1)
                                 {
-                                new SendSMS().execute();
+                                    new SendSMS().execute();
+
+                                }else if(SMSOption==2 && Baseconfig.SMS_Username.length()>0 && Baseconfig.SMS_Password.length()>0)
+                                {
+                                    new SendSMS().execute();
                                 }
                                 else
                                 {
@@ -464,8 +472,9 @@ public class StudentTabActivity extends AppCompatActivity {
                         ContentValues values = new ContentValues();
                         values.put("SID", Str_SID);
                         values.put("Paid_Fee", Str_FeeAmount);
-                        values.put("Paid_Date", Str_FeeDate);
-                        values.put("IsSMS_Sent", 0);
+                        values.put("Paid_Date", Str_FeeDate);     values.put("ServerIsUpdate",0);
+                        values.put("IsSMS_Sent", 0);   values.put("FUID", Baseconfig.App_UID);
+
                         db.insert("Bind_FeeEntry", null, values);
 
                         db.close();

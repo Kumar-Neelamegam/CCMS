@@ -195,8 +195,9 @@ public class Mstr_Subject extends AppCompatActivity {
 
         values.put("Subject_Name", Str_Subject);
         values.put("HandledBy", Str_Handleby);
-        values.put("IsActive", Str_Isactive);
-        values.put("IsUpdate", "0");
+        values.put("IsActive", Str_Isactive);     values.put("ServerIsUpdate",0);
+        values.put("IsUpdate", "0");   values.put("FUID", Baseconfig.App_UID);
+
         values.put("ActDate", Baseconfig.GetDate());
         db.insert("Mstr_Subject", null, values);
         db.close();

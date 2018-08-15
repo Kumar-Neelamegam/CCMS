@@ -362,6 +362,7 @@ public class Mark_Entry extends AppCompatActivity {
         values.put("IsActive", 1);
         values.put("IsUpdate", 0);
         values.put("IsSMS_Sent", 0);
+
         values.put("Absent_Status",Absent_Status);
 
 

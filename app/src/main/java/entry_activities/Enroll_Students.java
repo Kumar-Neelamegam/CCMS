@@ -9,9 +9,11 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatAutoCompleteTextView;
@@ -28,6 +30,8 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
+import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.MultiFormatWriter;
@@ -35,12 +39,15 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -518,8 +525,17 @@ public class Enroll_Students extends AppCompatActivity implements Imageutils.Ima
             @Override
             public void onClick(View view) {
 
-                imageutils = new Imageutils(Enroll_Students.this);
-                imageutils.imagepicker(1);
+
+                try {
+
+                   /* imageutils = new Imageutils(Enroll_Students.this);
+                    imageutils.imagepicker(1);*/
+
+                    showPictureDialog();
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -598,7 +614,110 @@ public class Enroll_Students extends AppCompatActivity implements Imageutils.Ima
 
     }
 
+    private int GALLERY = 1, CAMERA = 2;
+    private void showPictureDialog(){
 
+
+        try {
+            AlertDialog.Builder pictureDialog = new AlertDialog.Builder(this);
+            pictureDialog.setTitle("Select Action");
+            String[] pictureDialogItems = {
+                    "Select photo from gallery",
+                    "Capture photo from camera" };
+            pictureDialog.setItems(pictureDialogItems,
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            switch (which) {
+                                case 0:
+                                    choosePhotoFromGallary();
+                                    break;
+                                case 1:
+                                    takePhotoFromCamera();
+                                    break;
+                            }
+                        }
+                    });
+            pictureDialog.show();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void choosePhotoFromGallary() {
+        Intent galleryIntent = new Intent(Intent.ACTION_PICK,
+                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+
+        startActivityForResult(galleryIntent, GALLERY);
+    }
+
+    private void takePhotoFromCamera() {
+        Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(intent, CAMERA);
+    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == this.RESULT_CANCELED) {
+            return;
+        }
+        if (requestCode == GALLERY) {
+            if (data != null) {
+                Uri contentURI = data.getData();
+                try {
+                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), contentURI);
+                    String path = saveImage(bitmap);
+                    Toast.makeText(Enroll_Students.this, "Image Saved!", Toast.LENGTH_SHORT).show();
+                    photo.setImageBitmap(bitmap);
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    Toast.makeText(Enroll_Students.this, "Failed!", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+        } else if (requestCode == CAMERA) {
+            Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
+            photo.setImageBitmap(thumbnail);
+            saveImage(thumbnail);
+            Toast.makeText(Enroll_Students.this, "Image Saved!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public String saveImage(Bitmap myBitmap) {
+        try {
+            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+            myBitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+
+            File wallpaperDirectory = new File(Baseconfig.DATABASE_FILE_PATH + File.separator + "Student_Photos" + File.separator);
+            // have the object build the directory structure, if needed.
+            if (!wallpaperDirectory.exists()) {
+                wallpaperDirectory.mkdirs();
+            }
+
+            try {
+                File f = new File(wallpaperDirectory, Calendar.getInstance().getTimeInMillis() + ".jpg");
+                f.createNewFile();
+                FileOutputStream fo = new FileOutputStream(f);
+                fo.write(bytes.toByteArray());
+                MediaScannerConnection.scanFile(this,
+                        new String[]{f.getPath()},
+                        new String[]{"image/jpeg"}, null);
+                fo.close();
+                Log.d("TAG", "File Saved::--->" + f.getAbsolutePath());
+                Baseconfig.StudentImgPath = f.getAbsolutePath();
+
+                return f.getAbsolutePath();
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
     //**********************************************************************************************
     /*
     Date picker
@@ -905,15 +1024,21 @@ public class Enroll_Students extends AppCompatActivity implements Imageutils.Ima
             values.put("SID", Str_SID);
             values.put("BoardExam_No", Str_BoardExam);
             values.put("IsFullFee_Paid", "");
-            values.put("IsSMS_Sent", "0");
+            values.put("IsSMS_Sent", "0");     values.put("ServerIsUpdate",0);
+            values.put("FUID", Baseconfig.App_UID);
+
+
             db.insert("Bind_EnrollStudents", null, values);
 
+           // pushServerFirebase(values);
 
             if (Str_FeeAdvance != null && Str_FeeAdvance.length() > 0) {
                 values = new ContentValues();
                 values.put("SID", Str_SID);
                 values.put("Paid_Fee", Str_FeeAdvance);
                 values.put("Paid_Date", Baseconfig.GetDate());
+                values.put("FUID", Baseconfig.App_UID);     values.put("ServerIsUpdate",0);
+
                 db.insert("Bind_FeeEntry", null, values);
             }
 
@@ -938,6 +1063,8 @@ public class Enroll_Students extends AppCompatActivity implements Imageutils.Ima
                     values.put("IsActive", "1");
                     values.put("IsUpdate", "0");
                     values.put("ActDate", Baseconfig.GetDate());
+                    values.put("FUID", Baseconfig.App_UID);     values.put("ServerIsUpdate",0);
+
                     db.insert("Mstr_Occupation", null, values);
                 }
             }
@@ -950,6 +1077,8 @@ public class Enroll_Students extends AppCompatActivity implements Imageutils.Ima
                     values.put("Occupation_Name", Str_FatherJob);
                     values.put("IsActive", "1");
                     values.put("IsUpdate", "0");
+                    values.put("FUID", Baseconfig.App_UID);     values.put("ServerIsUpdate",0);
+
                     values.put("ActDate", Baseconfig.GetDate());
                     db.insert("Mstr_Occupation", null, values);
                 }
@@ -962,7 +1091,9 @@ public class Enroll_Students extends AppCompatActivity implements Imageutils.Ima
                     values = new ContentValues();
 
                     values.put("School_Name", Str_NameofSchool);
-                    values.put("IsActive", "1");
+                    values.put("IsActive", "1");     values.put("ServerIsUpdate",0);
+                    values.put("FUID", Baseconfig.App_UID);
+
                     values.put("IsUpdate", "0");
                     values.put("ActDate", Baseconfig.GetDate());
                     db.insert("Mstr_School", null, values);
@@ -980,6 +1111,18 @@ public class Enroll_Students extends AppCompatActivity implements Imageutils.Ima
         }
 
 
+    }
+
+    private void pushServerFirebase(ContentValues values) {
+        Map<String,Object> Hashvalue=new HashMap<>();
+
+        for (String s : values.keySet()) {
+            Hashvalue.put(s,values.get(s).toString());
+        }
+
+        Hashvalue.put("TimeStamp", Timestamp.now());
+
+        FirebaseFirestore.getInstance().collection("Bind_EnrollStudents").document().set(Hashvalue);
     }
 
     //**************************************************************************************
@@ -1130,12 +1273,16 @@ public class Enroll_Students extends AppCompatActivity implements Imageutils.Ima
     private Bitmap bitmap;
     private String file_name;
 
-    @Override
+ /*   @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        imageutils.onActivityResult(requestCode, resultCode, data);
+        try {
+            imageutils.onActivityResult(requestCode, resultCode, data);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-    }
+    }*/
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -1145,15 +1292,19 @@ public class Enroll_Students extends AppCompatActivity implements Imageutils.Ima
 
     @Override
     public void image_attachment(int from, String filename, Bitmap file, Uri uri) {
-        this.bitmap = file;
-        this.file_name = filename;
-        photo.setImageBitmap(file);
+        try {
+            this.bitmap = file;
+            this.file_name = filename;
+            photo.setImageBitmap(file);
 
-        String path = Baseconfig.DATABASE_FILE_PATH + File.separator + "Student_Photos" + File.separator;
-        // Toast.makeText(this, "image_attachement 1:"+path, Toast.LENGTH_SHORT).show();
-        Baseconfig.StudentImgPath = path + filename;
-        // Toast.makeText(this, "image_attachement 2:"+Baseconfig.StudentImgPath, Toast.LENGTH_SHORT).show();
-        imageutils.createImage(file, filename, path, false);
+            String path = Baseconfig.DATABASE_FILE_PATH + File.separator + "Student_Photos" + File.separator;
+            // Toast.makeText(this, "image_attachement 1:"+path, Toast.LENGTH_SHORT).show();
+            Baseconfig.StudentImgPath = path + filename;
+            // Toast.makeText(this, "image_attachement 2:"+Baseconfig.StudentImgPath, Toast.LENGTH_SHORT).show();
+            imageutils.createImage(file, filename, path, false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
     //**********************************************************************************************

@@ -23,6 +23,7 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -110,8 +111,20 @@ public class DashboardNew extends Fragment {
         try {
 
 
+
             MAC_ADDRESS = Baseconfig.GetMacAddress(getActivity());
             UUID = Baseconfig.GetUUIDAddress(getActivity());
+
+
+            try {
+                FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+                FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
+                        .setTimestampsInSnapshotsEnabled(true)
+                        .build();
+                firestore.setFirestoreSettings(settings);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
 
             GetInitialize(v);
@@ -260,14 +273,10 @@ public class DashboardNew extends Fragment {
     public void SendSMSNotification() {
         try {
             if (Baseconfig.CheckNW(getActivity())) {
-                if (Baseconfig.SMS_Username.length() > 0 && Baseconfig.SMS_Password.length() > 0) {
+
                     new SendSMS2().execute();//Paid fee sms
                     Log.e("SendSMSNotification", "SendSMSNotification");
-                } else {
-                    //Baseconfig.SweetDialgos(3, getActivity(), "Information", "Get username and password from SMS INDIA HUB to send sms..\nadd it in profile..", "OK");
 
-                    // Toast.makeText(getActivity(), "Get username and password from SMS INDIA HUB to send sms..\nadd it in profile..", Toast.LENGTH_SHORT).show();
-                }
             }
         } catch (Exception e) {
             e.printStackTrace();

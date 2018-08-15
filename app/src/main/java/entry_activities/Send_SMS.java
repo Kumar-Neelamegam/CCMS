@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import core_modules.Task_Navigation;
+import registers_activities.Students_Register;
 import utilities.Baseconfig;
 import utilities.FButton;
 import vcc.coremodule.R;
@@ -245,8 +246,9 @@ public class Send_SMS extends AppCompatActivity  {
                         values.put("SMS_For","");
                         values.put("IsSend",0);
                         values.put("IsActive",1);
-                        values.put("IsSMS_Sent", 0);
-                        values.put("IsUpdate",0);
+                        values.put("IsSMS_Sent", 0);     values.put("ServerIsUpdate",0);
+                        values.put("IsUpdate",0);   values.put("FUID", Baseconfig.App_UID);
+
                         values.put("ActDate",Baseconfig.GetDate());
                         db.insert("Bind_SMSEntry",null,values);
 
@@ -272,8 +274,9 @@ public class Send_SMS extends AppCompatActivity  {
                 values.put("IsSend",0);
                 values.put("IsActive",1);
                 values.put("IsUpdate",0);
-                values.put("IsSMS_Sent", 0);
-                values.put("ActDate",Baseconfig.GetDate());
+                values.put("IsSMS_Sent", 0);     values.put("ServerIsUpdate",0);
+                values.put("ActDate",Baseconfig.GetDate());   values.put("FUID", Baseconfig.App_UID);
+
                 db.insert("Bind_SMSEntry",null,values);
 
                 Log.e("Inserted Values 2: ", String.valueOf(values));
@@ -295,7 +298,13 @@ public class Send_SMS extends AppCompatActivity  {
 
         if (Baseconfig.CheckNW(Send_SMS.this)) {
 
-            if(Baseconfig.SMS_Username.length()>0 && Baseconfig.SMS_Password.length()>0)
+            String SMSOption_Query="select SMSOption as dstatus from Bind_InstituteInfo";
+            int SMSOption = Integer.parseInt(Baseconfig.LoadValue(SMSOption_Query));
+
+            if(SMSOption==1)
+            {
+                new SendSMS().execute();
+            }else if(SMSOption==2 && Baseconfig.SMS_Username.length()>0 && Baseconfig.SMS_Password.length()>0)
             {
                 new SendSMS().execute();
             }

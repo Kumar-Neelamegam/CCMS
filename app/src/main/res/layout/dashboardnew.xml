@@ -14,9 +14,11 @@
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:scrollbarStyle="@null"
         android:layout_margin="10dp"
         android:background="@color/white"
         android:fadeScrollbars="false"
+        android:fadingEdge="none"
         android:scrollbars="none" />
 
 

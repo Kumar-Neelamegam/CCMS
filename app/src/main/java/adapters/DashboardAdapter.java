@@ -255,8 +255,12 @@ public class DashboardAdapter  extends RecyclerView.Adapter<DashboardAdapter.Vie
        // Dialog dialog=Baseconfig.showCustomDialog("","",context);
        // dialog.show();
 
-        Intent payment=new Intent(context, PaymentPage.class);
-        context.startActivity(payment);
+        try {
+            Intent payment=new Intent(context, PaymentPage.class);
+            context.startActivity(payment);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
 
     }

@@ -244,8 +244,9 @@ public class Mstr_Fee extends AppCompatActivity {
         values.put("Subject_Id", Str_SubId);
         values.put("Fee", Str_Fee);
         values.put("IsActive", Str_Isactive);
-        values.put("IsUpdate", "0");
-        values.put("ActDate", Baseconfig.GetDate());
+        values.put("IsUpdate", "0");     values.put("ServerIsUpdate",0);
+        values.put("ActDate", Baseconfig.GetDate());   values.put("FUID", Baseconfig.App_UID);
+
         db.insert("Mstr_Fee", null, values);
         db.close();
 
