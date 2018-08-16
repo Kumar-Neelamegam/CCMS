@@ -1080,16 +1080,16 @@ public class Baseconfig {
                 if (c.moveToFirst()) {
                     do {
 
-                        App_Id=c.getString(c.getColumnIndex("Id"));
-                        App_Institute_Name=c.getString(c.getColumnIndex("Institute_Name"));
-                        App_Institute_Address=c.getString(c.getColumnIndex("Institute_Address"));
-                        App_Mobile=c.getString(c.getColumnIndex("Mobile"));
-                        App_Owner_Name=c.getString(c.getColumnIndex("Owner_Name"));
-                        App_Logo=c.getString(c.getColumnIndex("Logo"));
-                        App_Email=c.getString(c.getColumnIndex("Email"));
-                        App_EmailPassword=c.getString(c.getColumnIndex("EmailPassword"));
-                        App_SMSOption=c.getString(c.getColumnIndex("SMSOption"));
-                        App_UID=c.getString(c.getColumnIndex("UID"));
+                        Baseconfig.App_Id=c.getString(c.getColumnIndex("Id"));
+                        Baseconfig.App_Institute_Name=c.getString(c.getColumnIndex("Institute_Name"));
+                        Baseconfig.App_Institute_Address=c.getString(c.getColumnIndex("Institute_Address"));
+                        Baseconfig.App_Mobile=c.getString(c.getColumnIndex("Mobile"));
+                        Baseconfig.App_Owner_Name=c.getString(c.getColumnIndex("Owner_Name"));
+                        Baseconfig.App_Logo=c.getString(c.getColumnIndex("Logo"));
+                        Baseconfig.App_Email=c.getString(c.getColumnIndex("Email"));
+                        Baseconfig.App_EmailPassword=c.getString(c.getColumnIndex("EmailPassword"));
+                        Baseconfig.App_SMSOption=c.getString(c.getColumnIndex("SMSOption"));
+                        Baseconfig.App_UID=c.getString(c.getColumnIndex("UID"));
 
                     } while (c.moveToNext());
                 }

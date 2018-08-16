@@ -84,6 +84,8 @@ public class Task_Navigation extends AppCompatActivity {
             Controllisteners();
 
 
+            Baseconfig.GetOwnerInfo();
+
         } catch (Exception e) {
             e.printStackTrace();
 

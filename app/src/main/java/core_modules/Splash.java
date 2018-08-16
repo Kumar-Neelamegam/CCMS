@@ -194,14 +194,13 @@ public class Splash extends RuntimePermissionsActivity implements ActivityCompat
 
 
 
-                            } else if (mFirebaseUser != null) //
+                            }else if (mFirebaseUser != null) //
                             {
 
-                                finish();
-                                Intent intent = new Intent(Splash.this, Institute_Registration.class);
-                                startActivity(intent);
+                                GetInstitueInfoFromDB();
 
-                            } else {
+
+                            }  else {
 
                                 DoLogin();
 
@@ -313,8 +312,6 @@ public class Splash extends RuntimePermissionsActivity implements ActivityCompat
                         Map<String,Object> values=documentSnapshot.getData();
                         insertUserDetails(values);
                     }
-
-
                     //Data insert
                     Toast.makeText(Splash.this, "Signing In Success", Toast.LENGTH_LONG).show();
                     startActivity(new Intent(Splash.this, Task_Navigation.class));
@@ -364,7 +361,12 @@ public class Splash extends RuntimePermissionsActivity implements ActivityCompat
             String SMSUsername =(String) value.get("SMSUsername");
             String Institute_Address =(String) value.get("Institute_Address");
             String IsUpdate =(String) value.get("IsUpdate");
-            String IsPaid =(String) value.get("IsPaid");
+            String IsPaid = "0";
+            try {
+                IsPaid = String.valueOf((Integer) value.get("IsPaid"));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
             values.put("Institute_Name", Institute_Name);
             values.put("Institute_Address", Institute_Address);

@@ -133,8 +133,6 @@ public class DashboardNew extends Fragment {
 
             SendSMSNotification();
 
-            Baseconfig.GetOwnerInfo();
-
             //  addNewContact();
 
             //   ReadSingleContact();

@@ -1,5 +1,6 @@
 package adapters;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.IntentFilter;
@@ -19,14 +20,23 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 
+import org.apache.harmony.awt.datatransfer.DataSnapshot;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.annotation.Nullable;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -37,14 +47,13 @@ import utilities.LocalSharedPreference;
 import vcc.coremodule.R;
 
 
-
 public class Plans_Adapter extends RecyclerView.Adapter<Plans_Adapter.PriceViewHolder> {
 
     List<Plans_Data> pricingList;
-    String email="";
-    String phone="";
-    String purpose="";
-    String buyername="";
+    String email = "";
+    String phone = "";
+    String purpose = "";
+    String buyername = "";
     String GetCustomerName = "";
     Context ctx;
     LocalSharedPreference sharedPreference;
@@ -52,11 +61,11 @@ public class Plans_Adapter extends RecyclerView.Adapter<Plans_Adapter.PriceViewH
     public Plans_Adapter(List<Plans_Data> pricingList, Context ctx) {
         this.pricingList = pricingList;
 
-        this.ctx= ctx;
-         email = Baseconfig.App_Email;
-         phone = Baseconfig.App_Mobile;
-         purpose = ctx.getString(R.string.app_name);
-         buyername = Baseconfig.App_Owner_Name;
+        this.ctx = ctx;
+        email = Baseconfig.App_Email;
+        phone = Baseconfig.App_Mobile;
+        purpose = ctx.getString(R.string.app_name);
+        buyername = Baseconfig.App_Owner_Name;
         GetCustomerName = Baseconfig.LoadValue("select Institute_Name as dstatus from Bind_InstituteInfo");
         sharedPreference = new LocalSharedPreference(ctx);
     }
@@ -71,7 +80,7 @@ public class Plans_Adapter extends RecyclerView.Adapter<Plans_Adapter.PriceViewH
     public void onBindViewHolder(@NonNull PriceViewHolder holder, int position) {
 
 
-        Plans_Data pricing=pricingList.get(position);
+        Plans_Data pricing = pricingList.get(position);
 
 
         holder.cardName.setText(GetCustomerName);
@@ -81,18 +90,16 @@ public class Plans_Adapter extends RecyclerView.Adapter<Plans_Adapter.PriceViewH
         holder.totalPrice.setText(pricing.totalprice);
         holder.cardView.setCardBackgroundColor(Color.parseColor(pricing.cardcolor));
 
-     //   if(!Baseconfig.ExpiryStatus || !sharedPreference.getBoolean(Baseconfig.Preference_ExpiryStatus))
-        if(!sharedPreference.getBoolean(Baseconfig.Preference_TrailStatus))
-        {
-            if(position==0)
-            {
+        //   if(!Baseconfig.ExpiryStatus || !sharedPreference.getBoolean(Baseconfig.Preference_ExpiryStatus))
+        if (!sharedPreference.getBoolean(Baseconfig.Preference_TrailStatus)) {
+            if (position == 0) {
                 holder.Payment.setText("Accept");
 
             }
 
-        }else//true na
+        } else//true na
         {
-            if(position==0) {
+            if (position == 0) {
                 holder.Payment.setVisibility(View.GONE);
             }
 
@@ -101,23 +108,20 @@ public class Plans_Adapter extends RecyclerView.Adapter<Plans_Adapter.PriceViewH
         holder.Payment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try{
+                try {
 
-                    if(position==0 && holder.Payment.getText().equals("Accept"))//Trail user
+                    if (position == 0 && holder.Payment.getText().equals("Accept"))//Trail user
                     {
-                        UpdateResultStatus("5","0");
+                        UpdateResultStatus("5", "0");
                         sharedPreference.setBoolean(Baseconfig.Preference_TrailStatus, true);//Full data
 
                         return;
-                    }else
-                    {
+                    } else {
                         if (Baseconfig.CheckNW(ctx)) {
 
                             callInstamojoPay(email, phone, String.valueOf(holder.totalPrice.getText()), purpose, buyername, pricing.validupto.split(" ")[0], String.valueOf(pricing.payid));
 
-                        }
-                        else
-                        {
+                        } else {
 
                             Baseconfig.SweetDialgos(4, ctx, "Information", " No internet connection found..try later ", "OK");
 
@@ -126,8 +130,7 @@ public class Plans_Adapter extends RecyclerView.Adapter<Plans_Adapter.PriceViewH
                     }
 
 
-                }catch (Exception e)
-                {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 
@@ -138,7 +141,6 @@ public class Plans_Adapter extends RecyclerView.Adapter<Plans_Adapter.PriceViewH
         });
 
 
-
     }
 
     @Override
@@ -147,7 +149,7 @@ public class Plans_Adapter extends RecyclerView.Adapter<Plans_Adapter.PriceViewH
     }
 
 
-    static class PriceViewHolder extends RecyclerView.ViewHolder{
+    static class PriceViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.parentcard)
         CardView cardView;
@@ -170,7 +172,6 @@ public class Plans_Adapter extends RecyclerView.Adapter<Plans_Adapter.PriceViewH
         }
 
     }
-
 
 
     InstapayListener listener;
@@ -206,9 +207,7 @@ public class Plans_Adapter extends RecyclerView.Adapter<Plans_Adapter.PriceViewH
     }
 
 
-
     private void initListener(String StudentCount, String PayId) {
-
         try {
 
             listener = new InstapayListener() {
@@ -237,18 +236,19 @@ public class Plans_Adapter extends RecyclerView.Adapter<Plans_Adapter.PriceViewH
     }
 
 
+    @SuppressLint("LongLogTag")
     private void UpdateResultStatus(String StudentCount, String PayId) {
         try {
             SQLiteDatabase db = Baseconfig.GetDb();
 
-            String UpdateStudentCount="Update Bind_InstituteInfo set IsPaid=1, PaidDate='"+Baseconfig.GetDate()+"', " +"StudentCount=StudentCount+'"+StudentCount+"', " +"PayId='"+PayId+"'";
+            String UpdateStudentCount = "Update Bind_InstituteInfo set IsPaid=1, PaidDate='" + Baseconfig.GetDate() + "', " + "StudentCount=StudentCount+" + StudentCount + ", " + "PayId='" + PayId + "'";
             Log.e("UpdateStudentCountQuery: ", UpdateStudentCount);
             db.execSQL(UpdateStudentCount);//if ispaid==1
             db.close();
 
-            UpdateToFirebase(PayId,StudentCount);
+            UpdateToFirebase(PayId, StudentCount);
 
-            ((Activity)ctx).finish();
+            ((Activity) ctx).finish();
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -260,38 +260,49 @@ public class Plans_Adapter extends RecyclerView.Adapter<Plans_Adapter.PriceViewH
 
 
         try {
-            FirebaseFirestore db=FirebaseFirestore.getInstance();
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
 
             Map<String, Object> newContact = new HashMap<>();
             newContact.put("IsPaid", 1);
             newContact.put("PayId", PAYID);
             newContact.put("PaidDate", Baseconfig.Device_OnlyDate());
             int getCurrentPlanCount = Integer.parseInt(Baseconfig.LoadValueInt("select StudentCount as dstatus from Bind_InstituteInfo where IsPaid=1 and UID='" + Baseconfig.App_UID + "'"));
-            newContact.put("StudentCount", getCurrentPlanCount+STUDENTCOUNT);
+            newContact.put("StudentCount", getCurrentPlanCount + STUDENTCOUNT);
 
-            db.collection(Baseconfig.FIREBASE_INSTITUTE_USERS).document(Baseconfig.App_UID).update(newContact)
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+            FirebaseFirestore.getInstance().collection(Baseconfig.FIREBASE_INSTITUTE_USERS).whereEqualTo("UID", Baseconfig.App_UID).limit(1)
+                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
                         @Override
-                        public void onSuccess(Void aVoid) {
-
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-
-                            Log.d("TAG", e.toString());
+                        public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                            DocumentReference documentReference= queryDocumentSnapshots.getDocumentChanges().get(0).getDocument().getReference();
+                            updateDocument(PAYID, STUDENTCOUNT, getCurrentPlanCount, documentReference);
                         }
                     });
+
+
         } catch (Exception e) {
             e.printStackTrace();
         }
 
 
+    }
 
-
-
-
+    private void updateDocument(String PAYID, String STUDENTCOUNT, int getCurrentPlanCount, DocumentReference userReference) {
+        userReference.update("IsPaid", 1);
+        userReference.update("PayId", PAYID);
+        userReference.update("PaidDate", Baseconfig.Device_OnlyDate());
+        userReference.update("StudentCount", String.valueOf(getCurrentPlanCount + Integer.parseInt(STUDENTCOUNT)))
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.e("Result", "Success");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d("TAG", e.toString());
+                    }
+                });
     }
 
     private void PushtoFireBasePaymentTransaction(String StudentCount, String PAYID, String UID, String PurchaseDate) {
