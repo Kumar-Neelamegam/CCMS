@@ -37,6 +37,7 @@ import java.util.Map;
 import background.Webservice;
 import io.fabric.sdk.android.Fabric;
 import utilities.Baseconfig;
+import utilities.LocalSharedPreference;
 import utilities.RuntimePermissionsActivity;
 import vcc.coremodule.R;
 
@@ -108,35 +109,36 @@ public class Splash extends RuntimePermissionsActivity implements ActivityCompat
     public void init() {
 
 
-        File f = new File(Baseconfig.DATABASE_FILE_PATH);
+        try {
+            File f = new File(Baseconfig.DATABASE_FILE_PATH);
 
-        if (!f.exists()) {
+            if (!f.exists()) {
 
 
-            File file = new File(Baseconfig.DATABASE_FILE_PATH);
-            file.mkdirs();
+                File file = new File(Baseconfig.DATABASE_FILE_PATH);
+                file.mkdirs();
 
+            }
+
+
+            // Check if the database exists before copying
+            boolean initialiseDatabase = (new File(Baseconfig.DATABASE_NAME)).exists();
+
+            Log.e("DB Found: ", String.valueOf(initialiseDatabase));
+
+            if (initialiseDatabase == false) {
+
+                copydb.execute();
+
+            } else {
+
+
+                LoadNextActivity();
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
-
-        // Check if the database exists before copying
-        boolean initialiseDatabase = (new File(Baseconfig.DATABASE_NAME)).exists();
-
-        Log.e("DB Found: ", String.valueOf(initialiseDatabase));
-
-        if (initialiseDatabase == false) {
-
-            copydb.execute();
-
-        } else {
-
-
-            LoadNextActivity();
-
-        }
-
-
-
 
 
     }
@@ -145,14 +147,18 @@ public class Splash extends RuntimePermissionsActivity implements ActivityCompat
 
     public void GetInitialize() {
 
-        mFirebaseAuth = FirebaseAuth.getInstance();
-        mFirebaseUser = mFirebaseAuth.getCurrentUser();
+        try {
+            mFirebaseAuth = FirebaseAuth.getInstance();
+            mFirebaseUser = mFirebaseAuth.getCurrentUser();
 
-        YoYo.with(Techniques.BounceIn).duration(2500).playOn(findViewById(R.id.logo));
+            YoYo.with(Techniques.BounceIn).duration(2500).playOn(findViewById(R.id.logo));
 
-        progressBar = findViewById(R.id.spin_kit);
+            progressBar = findViewById(R.id.spin_kit);
 
-        progress_status = findViewById(R.id.textprgrs);
+            progress_status = findViewById(R.id.textprgrs);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
 
     }
@@ -183,15 +189,14 @@ public class Splash extends RuntimePermissionsActivity implements ActivityCompat
 
                             String Query = "select Id as dstatus from Bind_InstituteInfo";
                             boolean Registration = Baseconfig.LoadBooleanStatus(Query);
+
                             Webservice.startWebservice();
+
                             if (mFirebaseUser != null && Registration) { //both case passed {login, registration}
 
                                  finish();
                                 Intent intent = new Intent(Splash.this, Task_Navigation.class);
                                 startActivity(intent);
-
-
-
 
 
                             }else if (mFirebaseUser != null) //
@@ -316,6 +321,9 @@ public class Splash extends RuntimePermissionsActivity implements ActivityCompat
                     Toast.makeText(Splash.this, "Signing In Success", Toast.LENGTH_LONG).show();
                     startActivity(new Intent(Splash.this, Task_Navigation.class));
                     finish();
+                    LocalSharedPreference sharedPreference;
+                    sharedPreference = new LocalSharedPreference(Splash.this);
+                    sharedPreference.setBoolean(Baseconfig.Preference_TrailStatus, true);//Full data
 
                 } else {
                     Log.d("", "No such document");
@@ -390,6 +398,11 @@ public class Splash extends RuntimePermissionsActivity implements ActivityCompat
 
             db.insert("Bind_InstituteInfo", null, values);
             db.close();
+
+            LocalSharedPreference sharedPreference;
+            sharedPreference = new LocalSharedPreference(Splash.this);
+            sharedPreference.setBoolean(Baseconfig.Preference_TrailStatus, true);//Full data
+
         } catch (Exception e) {
             e.printStackTrace();
         }

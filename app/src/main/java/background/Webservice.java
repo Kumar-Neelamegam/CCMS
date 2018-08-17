@@ -3,6 +3,7 @@ package background;
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -13,7 +14,9 @@ import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,18 +42,21 @@ public class Webservice {
             "Temp_MarkEntry",
             "Bind_Attendance"};
 
+    static ScheduledExecutorService scheduledExecutorService;
+
     public static void startWebservice() {
 
-        ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
+        scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
 
         scheduledExecutorService.scheduleAtFixedRate(() -> {
             try {
                 for (int i = 0; i < tableNames.length; i++) {
 
 
-                    Export_FirebaseServer_Multi(tableNames[i]);
+                    Export_FirebaseServer(tableNames[i]);
 
-                   //Import_FirebaseServer(tableNames[i]);
+                   Import_FirebaseServer(tableNames[i]);
+
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -62,139 +68,104 @@ public class Webservice {
 
 
 
-    public void insert_EnrollStudent() {
+    public static void stopWebservice() {
 
-        Cursor cursor = Baseconfig.GetDb().rawQuery("Select * from Bind_EnrollStudents where IsUpdate='0'", null);
-
-        List<Map<String, Object>> Hashvalue = new ArrayList<>();
-
-        if (cursor!=null) {
-
-            if (cursor.moveToFirst()) {
-
-                do {
-
-                    for (String s : cursor.getColumnNames()) {
-                        Hashvalue.get(cursor.getPosition()).put(s, cursor.getString(cursor.getColumnIndex(s)));
-                    }
-                    Hashvalue.get(cursor.getPosition()).put("TimeStamp", Timestamp.now());
-
-                }while (cursor.moveToNext());
-
-            }
+        if(scheduledExecutorService!=null)
+        {
+            scheduledExecutorService.shutdown();
         }
-
-        FirebaseFirestore.getInstance().collection("Bind_EnrollStudents").document().set(Hashvalue);
 
     }
 
-    public static void Export_FirebaseServer_Multi(String tableName)
+
+
+
+
+        public static void Export_FirebaseServer(String tableName)
     {
-        Log.e("Export Started","**********************************************");
+        try {
+            Log.e("Export Started","**********************************************");
 
-        String query = "Select * from " + tableName + " where ServerIsUpdate='0'";
-        String LocalId;
-        @SuppressLint("Recycle") Cursor cursor = Baseconfig.GetDb().rawQuery(query, null);
+            String query = "Select * from " + tableName + " where ServerIsUpdate='0'";
+            String LocalId;
+            @SuppressLint("Recycle") Cursor cursor = Baseconfig.GetDb().rawQuery(query, null);
 
-        if (cursor!=null) {
+            if (cursor!=null) {
 
-            if (cursor.moveToFirst()) {
+                if (cursor.moveToFirst()) {
 
-                do {
-                    LocalId = cursor.getString(cursor.getColumnIndex("Id"));
-                    Map<String,Object> Hasvalue=new HashMap<>();
-                    for (String s : cursor.getColumnNames()) {
-                        Hasvalue.put(s, cursor.getString(cursor.getColumnIndex(s)));
-                    }
-                    Hasvalue.put("TimeStamp", Timestamp.now());
+                    do {
+                        LocalId = cursor.getString(cursor.getColumnIndex("Id"));
+                        Map<String,Object> Hasvalue=new HashMap<>();
+                        for (String s : cursor.getColumnNames()) {
+                            Hasvalue.put(s, cursor.getString(cursor.getColumnIndex(s)));
+                        }
+                        Date date=Baseconfig.getFirebaseServerDate();
+                        Hasvalue.put("TimeStamp", date);
 
-                    FirebaseFirestore.getInstance().collection(tableName).document().set(Hasvalue);
+                        FirebaseFirestore.getInstance().collection(tableName).document().set(Hasvalue);
 
-                    Baseconfig.GetDb().execSQL("UPDATE " + tableName + " SET  ServerIsUpdate='1' WHERE Id='" + LocalId + "';");
+                        Baseconfig.GetDb().execSQL("UPDATE " + tableName + " SET  ServerIsUpdate='1' WHERE Id='" + LocalId + "';");
 
+                    }while (cursor.moveToNext());
 
-                }while (cursor.moveToNext());
-
-            }
-        }
-
-        Log.e("Export Completed","**********************************************");
-
-
-    }
-
-
-
-    public static void Export_FirebaseServer(String tableName) {
-
-        String query = "Select * from " + tableName + " where ServerIsUpdate='0' limit 1";
-        String LocalId;
-        Cursor cursor = Baseconfig.GetDb().rawQuery(query, null);
-        Map<String, Object> Hashvalue = new HashMap<>();
-        if (cursor.getCount() > 0) {
-
-            cursor.moveToFirst();
-
-            try {
-                LocalId = cursor.getString(cursor.getColumnIndex("Id"));
-                for (String s : cursor.getColumnNames()) {
-                    Hashvalue.put(s, cursor.getString(cursor.getColumnIndex(s)));
                 }
-                Hashvalue.put("TimeStamp", Timestamp.now());
-
-                FirebaseFirestore.getInstance().collection(tableName).document().set(Hashvalue);
-
-
-                Baseconfig.GetDb().execSQL("UPDATE " + tableName + " SET  ServerIsUpdate='1' WHERE Id='" + LocalId + "';");
-            } catch (Exception e) {
-
-                Log.e(tableName, "Error Query=" + query);
             }
 
+            Log.e("Export Completed","**********************************************");
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
 
 
     }
+
+
+
+
 
     public static void Import_FirebaseServer(String tableName) {
 
+        try {
 
+            String MaxValue = Baseconfig.LoadValue("select IFNULL(max(Id),0) as dstatus from "+tableName);
 
-        FirebaseFirestore.getInstance()
-                .collection(tableName)
-                .whereEqualTo("FUID", Baseconfig.App_UID)
-             //   .whereLessThan("TimeStamp", Timestamp.now())
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+            FirebaseFirestore.getInstance()
+                    .collection(tableName)
+                    .whereEqualTo("FUID", Baseconfig.App_UID)
+                    .whereGreaterThan("Id", MaxValue)
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
 
-                        for (DocumentChange documentChange : task.getResult().getDocumentChanges()) {
+                            for (DocumentChange documentChange : task.getResult().getDocumentChanges()) {
 
-                            Map<String, Object> values = documentChange.getDocument().getData();
+                                Map<String, Object> values = documentChange.getDocument().getData();
 
-                            String uid = (String) values.get("FUID");
+                                String uid = (String) values.get("FUID");
 
-                            //ContentValue Preparing
-                            ContentValues contentValues=new ContentValues();
-                            for (String s : values.keySet()) {
-                                contentValues.put(s,values.get(s).toString());
+                                //ContentValue Preparing
+                                ContentValues contentValues=new ContentValues();
+                                for (String s : values.keySet()) {
+                                    contentValues.put(s,values.get(s).toString());
+                                }
+
+                                //Insert Table Value
+                                Baseconfig.GetDb().insert(tableName,null,contentValues);
+                                Log.e("User Id", uid);
                             }
-
-                            //Insert Table Value
-                           // Baseconfig.GetDb().insert(tableName,null,contentValues);
-
-
-                            Log.e("User Id", uid);
                         }
-                    }
-                });
-
-
+                    });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
-}
+
+
+}//END
 
 
 

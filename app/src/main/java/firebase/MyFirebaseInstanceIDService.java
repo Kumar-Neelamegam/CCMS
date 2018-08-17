@@ -22,21 +22,24 @@ public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
     public void onTokenRefresh() {
         super.onTokenRefresh();
 
-        sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+        try {
+            sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
 
-        //now we will have the token
-        String token = FirebaseInstanceId.getInstance().getToken();
+            //now we will have the token
+            String token = FirebaseInstanceId.getInstance().getToken();
 
-        //for now we are displaying the token in the log
-        //copy it as this method is called only when the new token is generated
-        //and usually new token is only generated when the app is reinstalled or the data is cleared
-        Log.e("MyRefreshedToken", token);
-        Log.e("MyRefreshedToken", token);
-        Baseconfig.FirebaseToken=token;
+            //for now we are displaying the token in the log
+            //copy it as this method is called only when the new token is generated
+            //and usually new token is only generated when the app is reinstalled or the data is cleared
+            Log.e("MyRefreshedToken", token);
+            Baseconfig.FirebaseToken=token;
 
-        SharedPreferences.Editor editor = sharedpreferences.edit();
-        editor.putString(Baseconfig.FirebaseToken_Str, token);
-        editor.commit();
+            SharedPreferences.Editor editor = sharedpreferences.edit();
+            editor.putString(Baseconfig.FirebaseToken_Str, token);
+            editor.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 }

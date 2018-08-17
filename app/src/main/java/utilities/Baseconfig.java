@@ -3,6 +3,7 @@ package utilities;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
@@ -40,6 +41,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.Timestamp;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.html.simpleparser.HTMLWorker;
@@ -58,6 +60,7 @@ import java.io.StringReader;
 import java.io.Writer;
 import java.text.DateFormat;
 import java.text.NumberFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -66,6 +69,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
+import background.Webservice;
 import vcc.coremodule.R;
 
 /**
@@ -74,6 +78,8 @@ import vcc.coremodule.R;
 
 public class Baseconfig {
 
+
+    public static final String ADMIN_NOTIFICATION = "ADMIN_NOTIFICATION";
 
     public static String FIREBASE_INSTITUTE_USERS="Institute_Users";
     public static String FIREBASE_PLANS="Plans";
@@ -258,32 +264,37 @@ public class Baseconfig {
 
     public static void ExitSweetDialog(final Context ctx, final Class<?> className) {
 
-        new SweetAlertDialog(ctx, SweetAlertDialog.WARNING_TYPE)
-                .setTitleText(ctx.getResources().getString(R.string.information))
-                .setContentText(ctx.getResources().getString(R.string.message))
-                .setCancelText(ctx.getResources().getString(R.string.no))
-                .setConfirmText(ctx.getResources().getString(R.string.yes))
-                .showCancelButton(true)
-                .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                    @Override
-                    public void onClick(SweetAlertDialog sDialog) {
+        try {
+            new SweetAlertDialog(ctx, SweetAlertDialog.WARNING_TYPE)
+                    .setTitleText(ctx.getResources().getString(R.string.information))
+                    .setContentText(ctx.getResources().getString(R.string.message))
+                    .setCancelText(ctx.getResources().getString(R.string.no))
+                    .setConfirmText(ctx.getResources().getString(R.string.yes))
+                    .showCancelButton(true)
+                    .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sDialog) {
 
 
-                        sDialog.dismiss();
+                            sDialog.dismiss();
 
-                    }
-                })
-                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                    @Override
-                    public void onClick(SweetAlertDialog sDialog) {
+                        }
+                    })
+                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sDialog) {
 
-                        sDialog.dismiss();
-                        ((Activity) ctx).finishAffinity();
+                            sDialog.dismiss();
+                            ((Activity) ctx).finishAffinity();
+                            Webservice.stopWebservice();
 
 
-                    }
-                })
-                .show();
+                        }
+                    })
+                    .show();
+        } catch (Resources.NotFoundException e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -1342,6 +1353,36 @@ public class Baseconfig {
             pw.flush();
             pw.close();
         }
+    }
+
+    public static Date getFirebaseServerDate()
+    {
+        Date date=null;
+
+        date=Timestamp.now().toDate();
+
+        return date;
+    }
+
+    public Date convertDatetoString(String date) throws ParseException {
+        SimpleDateFormat simpleDateFormat=new SimpleDateFormat("EEE MMM dd hh:mm:ss zzzz yyyy", Locale.ENGLISH);;
+        Date values=  simpleDateFormat.parse(date);
+        return values;
+    }
+
+    public String FireBaseimeStamp(Date date)
+    {
+        try {
+
+            SimpleDateFormat simpleDateFormat=new SimpleDateFormat("EEE MMM dd hh:mm:ss zzzz yyyy", Locale.ENGLISH);;
+            Date values=  simpleDateFormat.parse(date.toString());
+            String newValue=String.valueOf(values);
+            Log.e("value",newValue);
+            return newValue;
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 
 

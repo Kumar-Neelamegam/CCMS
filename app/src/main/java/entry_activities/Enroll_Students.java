@@ -82,7 +82,7 @@ public class Enroll_Students extends AppCompatActivity implements Imageutils.Ima
     ImageButton camera;
     AutoCompleteTextView school, occupation, mother_occupation;
     AppCompatEditText name, dob, fat_name, mot_name, address, mobile, subject, choose_batch, cgpa, fee, advance, joining_date, board_examno;
-    RadioButton female, male, rbtn_10th, rbtn_11th, rbtn_12th;
+    RadioButton female, male, rbtn_10th, rbtn_11th, rbtn_12th,rbtn_others;
     //Spinner batch;
     Button cancel, submit;
 
@@ -149,6 +149,7 @@ public class Enroll_Students extends AppCompatActivity implements Imageutils.Ima
             rbtn_10th = findViewById(R.id.rbtn_10th);
             rbtn_11th = findViewById(R.id.rbtn_11th);
             rbtn_12th = findViewById(R.id.rbtn_12th);
+            rbtn_others = findViewById(R.id.rbtn_others);
 
             board_examno = findViewById(R.id.edt_examno);
 
@@ -615,6 +616,8 @@ public class Enroll_Students extends AppCompatActivity implements Imageutils.Ima
 
     }
 
+
+
     private int GALLERY = 1, CAMERA = 2;
     private void showPictureDialog(){
 
@@ -875,7 +878,7 @@ public class Enroll_Students extends AppCompatActivity implements Imageutils.Ima
         }
 
 
-        if (rbtn_10th.isChecked() == false && rbtn_11th.isChecked() == false && rbtn_12th.isChecked() == false) {
+        if (rbtn_10th.isChecked() == false && rbtn_11th.isChecked() == false && rbtn_12th.isChecked() == false && rbtn_others.isChecked() == false) {
             strError.append("Standard*\n");
             ret = false;
         }
@@ -962,6 +965,8 @@ public class Enroll_Students extends AppCompatActivity implements Imageutils.Ima
                 Str_Standard = "11th";
             } else if (rbtn_12th.isChecked() == true) {
                 Str_Standard = "12th";
+            }else if (rbtn_others.isChecked() == true) {
+                Str_Standard = "Others";
             }
 
             Str_JoiningDate = joining_date.getText().toString();
