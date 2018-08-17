@@ -117,6 +117,7 @@ public class Enroll_Students extends AppCompatActivity implements Imageutils.Ima
         try {
             toolbar = findViewById(R.id.toolbar);
             setSupportActionBar(toolbar);
+            sharedPreference=new LocalSharedPreference(this);
 
             Back = findViewById(R.id.toolbar_back);
             Exit = findViewById(R.id.ic_exit);

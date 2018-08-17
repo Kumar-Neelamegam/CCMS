@@ -310,10 +310,10 @@ public class Institute_Registration extends AppCompatActivity implements Imageut
             values.put("UID", mFirebaseUser.getUid());
 
 
-            values.put("IsPaid",0);
-            values.put("PayId", "");
-            values.put("PaidDate", "");
-            values.put("StudentCount", "");
+            values.put("IsPaid",1);
+            values.put("PayId", "0");
+            values.put("PaidDate",  Baseconfig.Device_OnlyDate());
+            values.put("StudentCount", "5");
             values.put("FirebaseToken", Baseconfig.FirebaseToken);
 
 

@@ -91,7 +91,7 @@ public class Plans_Adapter extends RecyclerView.Adapter<Plans_Adapter.PriceViewH
         holder.cardView.setCardBackgroundColor(Color.parseColor(pricing.cardcolor));
 
         //   if(!Baseconfig.ExpiryStatus || !sharedPreference.getBoolean(Baseconfig.Preference_ExpiryStatus))
-        if (!sharedPreference.getBoolean(Baseconfig.Preference_TrailStatus)) {
+     /*   if (!sharedPreference.getBoolean(Baseconfig.Preference_TrailStatus)) {
             if (position == 0) {
                 holder.Payment.setText("Accept");
 
@@ -103,6 +103,10 @@ public class Plans_Adapter extends RecyclerView.Adapter<Plans_Adapter.PriceViewH
                 holder.Payment.setVisibility(View.GONE);
             }
 
+        }*/
+
+        if (position == 0) {
+            holder.Payment.setVisibility(View.GONE);
         }
 
         holder.Payment.setOnClickListener(new View.OnClickListener() {
@@ -110,13 +114,13 @@ public class Plans_Adapter extends RecyclerView.Adapter<Plans_Adapter.PriceViewH
             public void onClick(View v) {
                 try {
 
-                    if (position == 0 && holder.Payment.getText().equals("Accept"))//Trail user
+                /*    if (position == 0 && holder.Payment.getText().equals("Accept"))//Trail user
                     {
                         UpdateResultStatus("5", "0");
                         sharedPreference.setBoolean(Baseconfig.Preference_TrailStatus, true);//Full data
 
                         return;
-                    } else {
+                    } else {*/
                         if (Baseconfig.CheckNW(ctx)) {
 
                             callInstamojoPay(email, phone, String.valueOf(holder.totalPrice.getText()), purpose, buyername, pricing.validupto.split(" ")[0], String.valueOf(pricing.payid));
@@ -127,7 +131,7 @@ public class Plans_Adapter extends RecyclerView.Adapter<Plans_Adapter.PriceViewH
 
                         }
 
-                    }
+//                    }
 
 
                 } catch (Exception e) {
@@ -135,7 +139,7 @@ public class Plans_Adapter extends RecyclerView.Adapter<Plans_Adapter.PriceViewH
                 }
 
 
-                UpdateResultStatus("5", "1");
+            //    UpdateResultStatus("5", "1");
 
             }
         });
@@ -250,7 +254,7 @@ public class Plans_Adapter extends RecyclerView.Adapter<Plans_Adapter.PriceViewH
 
             ((Activity) ctx).finish();
 
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -262,19 +266,13 @@ public class Plans_Adapter extends RecyclerView.Adapter<Plans_Adapter.PriceViewH
         try {
             FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-            Map<String, Object> newContact = new HashMap<>();
-            newContact.put("IsPaid", 1);
-            newContact.put("PayId", PAYID);
-            newContact.put("PaidDate", Baseconfig.Device_OnlyDate());
-            int getCurrentPlanCount = Integer.parseInt(Baseconfig.LoadValueInt("select StudentCount as dstatus from Bind_InstituteInfo where IsPaid=1 and UID='" + Baseconfig.App_UID + "'"));
-            newContact.put("StudentCount", getCurrentPlanCount + STUDENTCOUNT);
-
+           // int getCurrentPlanCount = Integer.parseInt(Baseconfig.LoadValueInt("select StudentCount as dstatus from Bind_InstituteInfo where IsPaid=1 and UID='" + Baseconfig.App_UID + "'"));
             FirebaseFirestore.getInstance().collection(Baseconfig.FIREBASE_INSTITUTE_USERS).whereEqualTo("UID", Baseconfig.App_UID).limit(1)
                     .addSnapshotListener(new EventListener<QuerySnapshot>() {
                         @Override
                         public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                             DocumentReference documentReference= queryDocumentSnapshots.getDocumentChanges().get(0).getDocument().getReference();
-                            updateDocument(PAYID, STUDENTCOUNT, getCurrentPlanCount, documentReference);
+                            updateDocument(PAYID, STUDENTCOUNT, documentReference);
                         }
                     });
 
@@ -286,11 +284,11 @@ public class Plans_Adapter extends RecyclerView.Adapter<Plans_Adapter.PriceViewH
 
     }
 
-    private void updateDocument(String PAYID, String STUDENTCOUNT, int getCurrentPlanCount, DocumentReference userReference) {
+    private void updateDocument(String PAYID, String STUDENTCOUNT,  DocumentReference userReference) {
         userReference.update("IsPaid", 1);
         userReference.update("PayId", PAYID);
         userReference.update("PaidDate", Baseconfig.Device_OnlyDate());
-        userReference.update("StudentCount", String.valueOf(getCurrentPlanCount + Integer.parseInt(STUDENTCOUNT)))
+        userReference.update("StudentCount", String.valueOf(STUDENTCOUNT))
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -340,6 +338,7 @@ public class Plans_Adapter extends RecyclerView.Adapter<Plans_Adapter.PriceViewH
 
 
     }
+
 
 
 }//END
