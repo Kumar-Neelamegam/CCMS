@@ -102,6 +102,7 @@ public class Webservice {
                         }
                         Date date=Baseconfig.getFirebaseServerDate();
                         Hasvalue.put("TimeStamp", date);
+                        Hasvalue.put("LocalId", LocalId);
 
                         FirebaseFirestore.getInstance().collection(tableName).document().set(Hasvalue);
 
@@ -133,7 +134,7 @@ public class Webservice {
             FirebaseFirestore.getInstance()
                     .collection(tableName)
                     .whereEqualTo("FUID", Baseconfig.App_UID)
-                    .whereGreaterThan("Id", MaxValue)
+                    .whereGreaterThan("LocalId", MaxValue)
                     .get()
                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
@@ -148,7 +149,13 @@ public class Webservice {
                                 //ContentValue Preparing
                                 ContentValues contentValues=new ContentValues();
                                 for (String s : values.keySet()) {
-                                    contentValues.put(s,values.get(s).toString());
+                                    try{
+                                        contentValues.put(s,values.get(s).toString());
+                                    }catch(Exception e)
+                                    {
+                                        contentValues.put(s,"");
+                                    }
+
                                 }
 
                                 //Insert Table Value

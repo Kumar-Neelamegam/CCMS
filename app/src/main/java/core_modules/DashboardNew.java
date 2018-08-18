@@ -116,7 +116,7 @@ public class DashboardNew extends Fragment {
             UUID = Baseconfig.GetUUIDAddress(getActivity());
 
 
-            try {
+           /* try {
                 FirebaseFirestore firestore = FirebaseFirestore.getInstance();
                 FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
                         .setTimestampsInSnapshotsEnabled(true)
@@ -124,7 +124,7 @@ public class DashboardNew extends Fragment {
                 firestore.setFirestoreSettings(settings);
             } catch (Exception e) {
                 e.printStackTrace();
-            }
+            }*/
 
 
             GetInitialize(v);

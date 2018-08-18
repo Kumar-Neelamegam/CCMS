@@ -369,9 +369,9 @@ public class Splash extends RuntimePermissionsActivity implements ActivityCompat
             String SMSUsername =(String) value.get("SMSUsername");
             String Institute_Address =(String) value.get("Institute_Address");
             String IsUpdate =(String) value.get("IsUpdate");
-            String IsPaid = "0";
+            int IsPaid = 0;
             try {
-                IsPaid = String.valueOf((Integer) value.get("IsPaid"));
+                IsPaid =  (Integer) value.get("IsPaid");
             } catch (Exception e) {
                 e.printStackTrace();
             }
