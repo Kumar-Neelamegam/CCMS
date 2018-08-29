@@ -1,5 +1,6 @@
 package firebase;
 
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
@@ -34,16 +35,20 @@ public class FireBaseMessaging extends FirebaseMessagingService {
             String body = remoteMessage.getNotification().getBody();
 
             //then here we can use the title and body to build a notification
-            Log.e("Firebase Message: ",title+body);
+           // Log.e("Firebase Message: ",title+body);
 
-            if(title.toString().equalsIgnoreCase(Baseconfig.ADMIN_NOTIFICATION))//For DB Updated
+            if(title!= null && title.toString().equalsIgnoreCase(Baseconfig.ADMIN_NOTIFICATION))//For DB Updated
             {
 
-                String Query=body;
-                Log.e("Admin Notification Query: ", body);
-                SQLiteDatabase db=Baseconfig.GetDb();
-                db.execSQL(Query);
-                db.close();
+                try {
+                    String Query=body;
+                    Log.e("Admin Notification Query: ", body);
+                    SQLiteDatabase db=Baseconfig.GetDb();
+                    db.execSQL(Query);
+                    db.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
             }else
             {

@@ -81,8 +81,8 @@ public class Institute_Registration extends AppCompatActivity {
     RadioButton MobileSMS, GatewaySMS;
     LinearLayout SMSGatewayLayout;
 
-    FirebaseAuth auth;
-    FirebaseUser mFirebaseUser;
+    private FirebaseAuth mFirebaseAuth;
+    private FirebaseUser mFirebaseUser;
 
     //*********************************************************************************************
 
@@ -94,6 +94,20 @@ public class Institute_Registration extends AppCompatActivity {
 
         try {
 
+            //Go to next
+            String Query = "select Id as dstatus from Bind_InstituteInfo";
+            boolean Registration = Baseconfig.LoadBooleanStatus(Query);
+            mFirebaseAuth = FirebaseAuth.getInstance();
+            mFirebaseUser = mFirebaseAuth.getCurrentUser();
+
+            if (mFirebaseUser != null && Registration) {     //Data insert
+                Toast.makeText(Institute_Registration.this, "Signing In Success", Toast.LENGTH_LONG).show();
+                startActivity(new Intent(Institute_Registration.this, Task_Navigation.class));
+                finish();
+                LocalSharedPreference sharedPreference;
+                sharedPreference = new LocalSharedPreference(Institute_Registration.this);
+                sharedPreference.setBoolean(Baseconfig.Preference_TrailStatus, true);//Full data
+            }
 
             GetInitialize();
 
@@ -110,9 +124,6 @@ public class Institute_Registration extends AppCompatActivity {
 
     //**********************************************************************************************
     private void GetInitialize() {
-
-        auth = FirebaseAuth.getInstance();
-        mFirebaseUser = auth.getCurrentUser();
 
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -430,6 +441,7 @@ public class Institute_Registration extends AppCompatActivity {
             values.put("IsUpdate", "0");
             values.put("ActDate", Baseconfig.GetDate());
             values.put("UID", mFirebaseUser.getUid());
+            values.put("LocalId", 1);
 
 
             values.put("IsPaid",1);

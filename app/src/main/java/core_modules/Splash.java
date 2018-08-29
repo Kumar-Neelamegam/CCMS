@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.widget.ProgressBar;
@@ -18,11 +19,16 @@ import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog;
 
 import java.io.File;
@@ -40,6 +46,7 @@ import utilities.Baseconfig;
 import utilities.LocalSharedPreference;
 import utilities.RuntimePermissionsActivity;
 import vcc.coremodule.R;
+
 
 public class Splash extends RuntimePermissionsActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
 
@@ -68,12 +75,25 @@ public class Splash extends RuntimePermissionsActivity implements ActivityCompat
     private FirebaseAuth mFirebaseAuth;
     private FirebaseUser mFirebaseUser;
 
+    public static String[] tableNames = new String[]{
+            "Bind_EnrollStudents",
+            "Bind_FeeEntry",
+            "Bind_MarkEntry",
+            "Mstr_Batch",
+            "Mstr_Fee",
+            "Mstr_Occupation",
+            "Mstr_School",
+            "Mstr_Subject",
+            "Mstr_Test",
+            "Bind_Attendance","Bind_InstituteInfo"};
+
+    //****************************************************************************
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_splash);
-
 
 
         try {
@@ -165,6 +185,44 @@ public class Splash extends RuntimePermissionsActivity implements ActivityCompat
 
     public void LoadNextActivity() {
 
+        try {
+
+
+            String Query = "select Id as dstatus from Bind_InstituteInfo";
+            boolean Registration = Baseconfig.LoadBooleanStatus(Query);
+
+            Webservice.startWebservice();
+
+            if (mFirebaseUser != null && Registration) { //both case passed {login, registration}
+
+                finish();
+                Intent intent = new Intent(Splash.this, Task_Navigation.class);
+                startActivity(intent);
+
+
+            } else if (mFirebaseUser != null) //
+            {
+
+                GetInstitueInfoFromDB();
+
+
+            } else {
+
+                DoLogin();
+
+            }
+
+            try {
+                Baseconfig.getInstitueValues();
+            } catch (Exception e) {
+
+            }
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
+/*
 
         new Thread(new Runnable() {
             public void run() {
@@ -183,44 +241,6 @@ public class Splash extends RuntimePermissionsActivity implements ActivityCompat
                 handler.post(new Runnable() {
                     public void run() {
 
-                        try {
-
-
-
-                            String Query = "select Id as dstatus from Bind_InstituteInfo";
-                            boolean Registration = Baseconfig.LoadBooleanStatus(Query);
-
-                            Webservice.startWebservice();
-
-                            if (mFirebaseUser != null && Registration) { //both case passed {login, registration}
-
-                                 finish();
-                                Intent intent = new Intent(Splash.this, Task_Navigation.class);
-                                startActivity(intent);
-
-
-                            }else if (mFirebaseUser != null) //
-                            {
-
-                                GetInstitueInfoFromDB();
-
-
-                            }  else {
-
-                                DoLogin();
-
-                            }
-
-                            try {
-                                Baseconfig.getInstitueValues();
-                            } catch (Exception e) {
-
-                            }
-
-                        } catch (Exception e) {
-
-                            e.printStackTrace();
-                        }
 
                     }
                 });
@@ -237,7 +257,7 @@ public class Splash extends RuntimePermissionsActivity implements ActivityCompat
                 return
                         ++progress;
             }
-        }).start();
+        }).start();*/
 
     }
 
@@ -259,7 +279,6 @@ public class Splash extends RuntimePermissionsActivity implements ActivityCompat
                             .setAvailableProviders(providers)
                             .build(),
                     RC_SIGN_IN);
-
 
 
         } catch (Exception e) {
@@ -302,9 +321,114 @@ public class Splash extends RuntimePermissionsActivity implements ActivityCompat
         }
     }
 
+
+    public void Import_FirebaseServer(String tableName, int current_position) {
+
+        try {
+
+            String MaxValue = Baseconfig.LoadValue("select IFNULL(max(Id),0) as dstatus from " + tableName);
+            String KEY_UID = "FUID";
+            if (tableName.equalsIgnoreCase("Bind_InstituteInfo")) {
+                KEY_UID = "UID";
+                tableName = Baseconfig.FIREBASE_INSTITUTE_USERS;
+            } else {
+                KEY_UID = "FUID";
+                tableName = tableName;
+            }
+
+            String finalTableName = tableName;
+
+            FirebaseFirestore.getInstance()
+                    .collection(tableName)
+                    .whereEqualTo(KEY_UID, mFirebaseAuth.getCurrentUser().getUid())
+                    .whereGreaterThan("LocalId", MaxValue)
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+
+                                String KEY_UID = "FUID";
+                                String TABLE_NAME = "";
+                                if (finalTableName.equalsIgnoreCase(Baseconfig.FIREBASE_INSTITUTE_USERS)) {
+                                    KEY_UID = "UID";
+                                    TABLE_NAME = "Bind_InstituteInfo";
+                                } else {
+                                    KEY_UID = "FUID";
+                                    TABLE_NAME = finalTableName;
+                                }
+
+                                for (DocumentChange documentChange : task.getResult().getDocumentChanges()) {
+
+                                    Map<String, Object> values = documentChange.getDocument().getData();
+
+                                    String uid = (String) values.get(KEY_UID);
+
+                                    //ContentValue Preparing
+                                    ContentValues contentValues = new ContentValues();
+                                    for (String s : values.keySet()) {
+                                        try {
+                                            if (!s.equalsIgnoreCase("Id") && !s.equalsIgnoreCase("ServerIsUpdate")) {
+                                                contentValues.put(s, values.get(s).toString());
+                                            }
+
+                                            if (s.equalsIgnoreCase("ServerIsUpdate")) {
+                                                contentValues.put("ServerIsUpdate", 1);
+                                            }
+
+                                        } catch (Exception e) {
+                                            contentValues.put(s, "");
+                                        }
+
+                                    }
+
+                                    //Insert Table Value
+                                    Log.e("User Id", uid+"/"+TABLE_NAME);
+                                    Baseconfig.GetDb().insert(TABLE_NAME, null, contentValues);
+
+
+                                    //Go to next
+                                    String Query = "select Id as dstatus from Bind_InstituteInfo";
+                                    boolean Registration = Baseconfig.LoadBooleanStatus(Query);
+
+                                    if (mFirebaseUser != null && Registration) {     //Data insert
+                                        Toast.makeText(Splash.this, "Signing In Success", Toast.LENGTH_LONG).show();
+                                        startActivity(new Intent(Splash.this, Task_Navigation.class));
+                                        finish();
+                                        LocalSharedPreference sharedPreference;
+                                        sharedPreference = new LocalSharedPreference(Splash.this);
+                                        sharedPreference.setBoolean(Baseconfig.Preference_TrailStatus, true);//Full data
+                                    }
+
+                                }
+                        }
+                    });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+
     private void GetInstitueInfoFromDB() {
 
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        try {
+            for (int i = 0; i < tableNames.length; i++) {
+
+                Import_FirebaseServer(tableNames[i], i);
+
+            }
+
+            Thread.sleep(2500);
+
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        /*FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         Query docRef = db.collection(Baseconfig.FIREBASE_INSTITUTE_USERS).whereEqualTo("UID", mFirebaseAuth.getCurrentUser().getUid());
         docRef.get().addOnCompleteListener(task -> {
@@ -339,39 +463,38 @@ public class Splash extends RuntimePermissionsActivity implements ActivityCompat
 
                 Log.d("", "get failed with ", task.getException());
             }
-        });
+        });*/
 
 
     }
 
 
-
-    private void insertUserDetails(Map<String,Object> value) {
+    private void insertUserDetails(Map<String, Object> value) {
         try {
             SQLiteDatabase db = Baseconfig.GetDb();
             ContentValues values = new ContentValues();
 
-            String StudentCount =(String) value.get("StudentCount");
-            String ActDate =(String) value.get("ActDate");
-            String SMSOption =(String) value.get("SMSOption");
-            String Logo =(String) value.get("Logo");
-            String Institute_Name =(String) value.get("Institute_Name");
-            String PaidDate =(String) value.get("PaidDate");
-            String SMSSID =(String) value.get("SMSSID");
-            String EmailPassword =(String) value.get("EmailPassword");
-            String Owner_Name =(String) value.get("Owner_Name");
-            String Email =(String) value.get("Email");
-            String IsActive =(String) value.get("IsActive");
-            String UID =(String) value.get("UID");
-            String Mobile =(String) value.get("Mobile");
-            String PayId =(String) value.get("PayId");
-            String SMSPassword =(String) value.get("SMSPassword");
-            String SMSUsername =(String) value.get("SMSUsername");
-            String Institute_Address =(String) value.get("Institute_Address");
-            String IsUpdate =(String) value.get("IsUpdate");
+            String StudentCount = (String) value.get("StudentCount");
+            String ActDate = (String) value.get("ActDate");
+            String SMSOption = (String) value.get("SMSOption");
+            String Logo = (String) value.get("Logo");
+            String Institute_Name = (String) value.get("Institute_Name");
+            String PaidDate = (String) value.get("PaidDate");
+            String SMSSID = (String) value.get("SMSSID");
+            String EmailPassword = (String) value.get("EmailPassword");
+            String Owner_Name = (String) value.get("Owner_Name");
+            String Email = (String) value.get("Email");
+            String IsActive = (String) value.get("IsActive");
+            String UID = (String) value.get("UID");
+            String Mobile = (String) value.get("Mobile");
+            String PayId = (String) value.get("PayId");
+            String SMSPassword = (String) value.get("SMSPassword");
+            String SMSUsername = (String) value.get("SMSUsername");
+            String Institute_Address = (String) value.get("Institute_Address");
+            String IsUpdate = (String) value.get("IsUpdate");
             int IsPaid = 0;
             try {
-                IsPaid =  (Integer) value.get("IsPaid");
+                IsPaid = (Integer) value.get("IsPaid");
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -391,7 +514,7 @@ public class Splash extends RuntimePermissionsActivity implements ActivityCompat
             values.put("IsUpdate", IsUpdate);
             values.put("ActDate", ActDate);
             values.put("UID", UID);
-            values.put("IsPaid",IsPaid);
+            values.put("IsPaid", IsPaid);
             values.put("PayId", PayId);
             values.put("PaidDate", PaidDate);
             values.put("StudentCount", StudentCount);
@@ -448,7 +571,7 @@ public class Splash extends RuntimePermissionsActivity implements ActivityCompat
 
             os.close();
             is.close();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -500,7 +623,7 @@ public class Splash extends RuntimePermissionsActivity implements ActivityCompat
                 shipdb();
 
 
-            } catch (IOException e) {
+            } catch (Exception e) {
 
 
                 e.printStackTrace();
@@ -515,7 +638,7 @@ public class Splash extends RuntimePermissionsActivity implements ActivityCompat
 
         //***************************************************************************************************
 
-        private void shipdb() throws IOException {
+        private void shipdb() throws Exception {
 
             copyLogoFileAssets();
 
@@ -544,7 +667,7 @@ public class Splash extends RuntimePermissionsActivity implements ActivityCompat
 
 
                 }
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 

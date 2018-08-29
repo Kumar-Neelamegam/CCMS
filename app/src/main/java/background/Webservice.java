@@ -55,14 +55,14 @@ public class Webservice {
 
                     Export_FirebaseServer(tableNames[i]);
 
-                   Import_FirebaseServer(tableNames[i]);
+                    //Import_FirebaseServer(tableNames[i]);
 
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
             System.gc();
-        }, 0, 10, TimeUnit.SECONDS);
+        }, 0, 20, TimeUnit.SECONDS);
 
     }
 
@@ -101,7 +101,7 @@ public class Webservice {
                             Hasvalue.put(s, cursor.getString(cursor.getColumnIndex(s)));
                         }
                         Date date=Baseconfig.getFirebaseServerDate();
-                        Hasvalue.put("TimeStamp", date);
+                        Hasvalue.put("ServerTimeStamp", date);
                         Hasvalue.put("LocalId", LocalId);
 
                         FirebaseFirestore.getInstance().collection(tableName).document().set(Hasvalue);
