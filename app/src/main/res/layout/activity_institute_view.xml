@@ -126,7 +126,7 @@
                 </WebView>
 
 
-            <utilities.FButton
+            <vcc.cretivemindsz.kumar.utilities.FButton
                 android:layout_margin="5dp"
                 android:id="@+id/btn_update"
                 android:layout_width="match_parent"

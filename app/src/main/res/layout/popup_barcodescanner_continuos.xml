@@ -85,7 +85,7 @@
                 android:onClick="resume"
                 android:text="Resume" />
 
-            <utilities.FButton
+            <vcc.cretivemindsz.kumar.utilities.FButton
                 android:id="@+id/btn_close"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

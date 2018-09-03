@@ -1,0 +1,76 @@
+*********** Project for vetri coaching centre ********************
+***************** Developing by Muthukumar N and Vidhya K ****************
+||
+||
+|| Project design started at
+||
+||
+|| 20/05/2017
+||          * Almost completed all layout designs - by Vidhya K & Kumar
+||
+||
+||
+|| 23/05/2017
+||          * Submitted design document to client
+||
+||               Below changes requested by client
+||                  -> spinr dropdown
+||                  -> beep sound - attendance
+||                  -> student delete
+||                  -> sid - CMP201701
+||                  -> print- pdf and excel
+||                  -> sms - send all - register
+||
+||
+|| 24/05/2017
+||          * Verified by Mr.Donnie and Client of Vetri coaching centre
+||          * Payment negotiation completed - quote 22k and advance 5k
+||
+||
+|| Next Client Demo date fixed to 15/06/2017 beta version
+||
+||
+|| 16/06/2017
+||          * Submitted trail apk to the client
+||          * Received changes from Donnir on 17/6/17
+||
+|| 18/06/2017
+||          * Working over changes
+
+Password: Kumar2017$$
+
+66:A0:DA:86:48:5E:E5:EB:40:F3:6A:8E:86:3E:33:75:73:3B:1E:92
+
+F:\Android Projects\5.Original Source Code\CCMS>keytool -list -v -keystore F:\key_new_ccms.jks -alias key0
+Enter keystore password:
+Alias name: key0
+Creation date: May 13, 2018
+Entry type: PrivateKeyEntry
+Certificate chain length: 1
+Certificate[1]:
+Owner: CN=CCMS
+Issuer: CN=CCMS
+Serial number: 3cbdf6c3
+Valid from: Sun May 13 21:04:10 IST 2018 until: Thu May 07 21:04:10 IST 2043
+Certificate fingerprints:
+         MD5:  81:54:A2:5E:A4:A8:20:E6:8F:A2:00:11:72:6F:1F:D1
+         SHA1: BA:79:B5:7A:51:23:D3:EE:C6:5B:DB:58:33:E4:E3:49:37:8C:47:DD
+         SHA256: 74:DE:AE:9F:47:36:3B:C4:AA:2B:79:C3:81:48:57:C3:5E:7C:52:7C:1E:EB:E6:07:CF:FE:50:A6:99:6E:F2:86
+Signature algorithm name: SHA256withRSA
+Subject Public Key Algorithm: 2048-bit RSA key
+Version: 3
+
+Extensions:
+
+#1: ObjectId: 2.5.29.14 Criticality=false
+SubjectKeyIdentifier [
+KeyIdentifier [
+0000: 0B 39 F5 A9 F9 B2 3E 14   6E 35 C4 DC F9 DB 02 B2  .9....>.n5......
+0010: 9C CF 9B E7                                        ....
+]
+]
+
+
+Warning:
+The JKS keystore uses a proprietary format. It is recommended to migrate to PKCS12 which is an industry standard format using "keytool -importkeystore -srckeystore F:\key_new_ccms.jk
+s -destkeystore F:\key_new_ccms.jks -deststoretype pkcs12".

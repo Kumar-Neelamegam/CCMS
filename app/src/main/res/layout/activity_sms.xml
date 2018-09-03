@@ -153,7 +153,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
-                    android:background="@drawable/rounded_bg"
+                    android:vcc.cretivemindsz.kumar.background="@drawable/rounded_bg"
                     android:padding="5dp"
                     android:orientation="vertical">
 
@@ -215,7 +215,7 @@
                     android:padding="5dp">
 
 
-                    <utilities.FButton
+                    <vcc.cretivemindsz.kumar.utilities.FButton
                         android:id="@+id/btn_cancel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -233,7 +233,7 @@
                         fbutton:shadowHeight="5dp" />
 
 
-                    <utilities.FButton
+                    <vcc.cretivemindsz.kumar.utilities.FButton
                         android:id="@+id/btn_send"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

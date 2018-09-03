@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="vcc.coremodule">
+    package="vcc.cretivemindsz.kumar">
 
 
     <uses-permission android:name="android.permission.CAMERA" />
@@ -35,13 +35,13 @@
 
 
 
-        <service android:name="firebase.MyFirebaseInstanceIDService">
+        <service android:name="vcc.cretivemindsz.kumar.firebase.MyFirebaseInstanceIDService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
 
-        <service android:name="firebase.FireBaseMessaging">
+        <service android:name="vcc.cretivemindsz.kumar.firebase.FireBaseMessaging">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
@@ -50,7 +50,7 @@
 
 
 
-        <activity android:name="core_modules.Splash">
+        <activity android:name="vcc.cretivemindsz.kumar.core_modules.Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -62,7 +62,7 @@
 
         <activity
             android:windowSoftInputMode="stateAlwaysHidden"
-            android:name="core_modules.Task_Navigation"
+            android:name="vcc.cretivemindsz.kumar.core_modules.Task_Navigation"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
 
@@ -71,42 +71,42 @@
 
         <activity
             android:windowSoftInputMode="stateAlwaysHidden"
-            android:name="core_modules.Institute_Registration"
+            android:name="vcc.cretivemindsz.kumar.core_modules.Institute_Registration"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
             android:windowSoftInputMode="stateAlwaysHidden"
-            android:name="entry_activities.Enroll_Students"
+            android:name="vcc.cretivemindsz.kumar.entry_activities.Enroll_Students"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
             android:windowSoftInputMode="stateAlwaysHidden"
-            android:name="masters.Mstr_Test"
+            android:name="vcc.cretivemindsz.kumar.masters.Mstr_Test"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
             android:windowSoftInputMode="stateAlwaysHidden"
-            android:name="entry_activities.Send_SMS"
+            android:name="vcc.cretivemindsz.kumar.entry_activities.Send_SMS"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
             android:windowSoftInputMode="stateAlwaysHidden"
-            android:name="entry_activities.Take_Attendance"
+            android:name="vcc.cretivemindsz.kumar.entry_activities.Take_Attendance"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
             android:windowSoftInputMode="stateAlwaysHidden"
-            android:name="registers_activities.Students_Register"
+            android:name="vcc.cretivemindsz.kumar.registers_activities.Students_Register"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
             android:windowSoftInputMode="stateAlwaysHidden"
-            android:name="student_profile.StudentTabActivity"
+            android:name="vcc.cretivemindsz.kumar.student_profile.StudentTabActivity"
             android:theme="@style/AppTheme.NoActionBar" />
 
 
@@ -114,56 +114,56 @@
         <!--//Register_Activities-->
         <activity
             android:windowSoftInputMode="stateAlwaysHidden"
-            android:name="registers_activities.Attendance_Register"
+            android:name="vcc.cretivemindsz.kumar.registers_activities.Attendance_Register"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
             android:windowSoftInputMode="stateAlwaysHidden"
-            android:name="registers_activities.Mark_Register"
+            android:name="vcc.cretivemindsz.kumar.registers_activities.Mark_Register"
             android:theme="@style/AppTheme.NoActionBar" />
 
 
         <activity
             android:windowSoftInputMode="stateAlwaysHidden"
-            android:name="entry_activities.Mark_Entry"
+            android:name="vcc.cretivemindsz.kumar.entry_activities.Mark_Entry"
             android:theme="@style/AppTheme.NoActionBar" />
 
 
         <activity
-            android:name="masters.Masters"
+            android:name="vcc.cretivemindsz.kumar.masters.Masters"
             android:windowSoftInputMode="stateAlwaysHidden"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
 
 
         <activity
-            android:name="reports.Reports"
+            android:name="vcc.cretivemindsz.kumar.reports.Reports"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
-            android:name="core_modules.Institute_Edit"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden"
-            android:theme="@style/AppTheme.NoActionBar" />
-
-
-        <activity
-            android:name="core_modules.Institute_View"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden"
-            android:theme="@style/AppTheme.NoActionBar" />
-
-        <activity
-            android:name="student_profile.Student_Profile_Edit"
+            android:name="vcc.cretivemindsz.kumar.core_modules.Institute_Edit"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"
             android:theme="@style/AppTheme.NoActionBar" />
 
 
         <activity
-            android:name="masters.Mstr_Barcodes"
+            android:name="vcc.cretivemindsz.kumar.core_modules.Institute_View"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name="vcc.cretivemindsz.kumar.student_profile.Student_Profile_Edit"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+
+        <activity
+            android:name="vcc.cretivemindsz.kumar.masters.Mstr_Barcodes"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -172,50 +172,50 @@
 
      <!--   //Masters========================================================================================== -->
         <activity
-            android:name="masters.Mstr_Batch"
+            android:name="vcc.cretivemindsz.kumar.masters.Mstr_Batch"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="masters.Mstr_Fee"
+            android:name="vcc.cretivemindsz.kumar.masters.Mstr_Fee"
             android:windowSoftInputMode="stateAlwaysHidden"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="masters.Mstr_Occupation"
+            android:name="vcc.cretivemindsz.kumar.masters.Mstr_Occupation"
             android:windowSoftInputMode="stateAlwaysHidden"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:windowSoftInputMode="stateAlwaysHidden"
-            android:name="masters.Mstr_School"
+            android:name="vcc.cretivemindsz.kumar.masters.Mstr_School"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:windowSoftInputMode="stateAlwaysHidden"
-            android:name="masters.Mstr_Subject"
+            android:name="vcc.cretivemindsz.kumar.masters.Mstr_Subject"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
 
 
        <!-- //Reports========================================================================================== -->
         <activity
-            android:name="reports.Reports_Attendance"
+            android:name="vcc.cretivemindsz.kumar.reports.Reports_Attendance"
             android:windowSoftInputMode="stateAlwaysHidden"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
-            android:name="reports.Reports_Fee"
+            android:name="vcc.cretivemindsz.kumar.reports.Reports_Fee"
             android:windowSoftInputMode="stateAlwaysHidden"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
-            android:name="reports.Reports_Mark"
+            android:name="vcc.cretivemindsz.kumar.reports.Reports_Mark"
             android:windowSoftInputMode="stateAlwaysHidden"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
-            android:name="core_modules.PaymentPage"
+            android:name="vcc.cretivemindsz.kumar.core_modules.PaymentPage"
             android:windowSoftInputMode="stateAlwaysHidden"
             android:theme="@style/AppTheme.NoActionBar" />
        <!-- //========================================================================================== -->

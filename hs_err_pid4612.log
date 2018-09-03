@@ -141,7 +141,7 @@ Polling page: 0x0000000000650000
 
 CodeCache: size=245760Kb used=118133Kb max_used=118186Kb free=127626Kb
  bounds [0x00000000020b0000, 0x00000000094f0000, 0x00000000110b0000]
- total_blobs=29928 nmethods=29083 adapters=752
+ total_blobs=29928 nmethods=29083 vcc.cretivemindsz.kumar.adapters=752
  compilation: enabled
 
 Compilation events (10 events):

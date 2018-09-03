@@ -293,7 +293,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <utilities.FButton
+                    <vcc.cretivemindsz.kumar.utilities.FButton
                         android:id="@+id/btn_continue_later"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -310,7 +310,7 @@
                         fbutton:shadowEnabled="true"
                         fbutton:shadowHeight="5dp" />
 
-                    <utilities.FButton
+                    <vcc.cretivemindsz.kumar.utilities.FButton
                         android:id="@+id/btn_saveall"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
